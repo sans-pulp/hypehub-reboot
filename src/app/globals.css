@@ -1,3 +1,4 @@
+@import "../../node_modules/nes.css/css/nes.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,5 +18,12 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+.nes-field {
+  @apply flex w-full mb-4;
+}
+
+.nes-field label {
+  @apply w-4/12 !basis-auto !grow-0 !text-left;
 }
