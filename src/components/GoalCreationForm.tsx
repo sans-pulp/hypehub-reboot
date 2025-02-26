@@ -22,7 +22,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-import { Checkbox } from "./ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox"
    
 const goalTypes = ['Daily', 'Mission', 'Quest']
 const SelectGoalType = () => {
@@ -64,17 +64,18 @@ const AttributeCheckboxes = ({ selectedAttributes, onChange }: {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
       {attributeOptions.map((attribute) => (
-        <div key={attribute} className="flex items-center">
-          <input
-            type="checkbox"
+        <div key={attribute} className="flex items-center space-x-2">
+          <Checkbox
             id={`attribute-${attribute}`}
             checked={selectedAttributes.includes(attribute)}
-            onChange={() => handleToggleAttribute(attribute)}
-            className="mr-2 h-4 w-4"
+            onCheckedChange={() => handleToggleAttribute(attribute)}
           />
-          <label htmlFor={`attribute-${attribute}`} className="capitalize text-sm sm:text-base">
+          <Label 
+            htmlFor={`attribute-${attribute}`} 
+            className="capitalize text-sm sm:text-base cursor-pointer"
+          >
             {attribute.slice(0, 3).toUpperCase()}
-          </label>
+          </Label>
         </div>
       ))}
     </div>

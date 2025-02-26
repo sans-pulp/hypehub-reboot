@@ -8,6 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { register } from "@/app/login/actions";
 
+// Define the type for the server action response
+type AuthActionResponse = {
+  success?: boolean;
+  error?: string;
+};
+
 export const RegisterForm = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -30,16 +36,18 @@ export const RegisterForm = () => {
       formData.append("email", email);
       formData.append("password", password);
 
-      // Call the server action directly
-      const result = await register(formData);
+      // Call the server action with the AuthActionResponse type
+      const result = await register(formData) as AuthActionResponse;
 
       if (result.error) {
         setError(result.error);
       } else if (result.success) {
         router.push("/login?registered=true");
       }
-    } catch (err: any) {
-      setError(err.message || "Registration failed");
+    } catch (error) {
+      // This catch block handles network errors or other unexpected issues
+      // not related to the auth response itself
+      setError(error instanceof Error ? error.message : "Registration failed");
     } finally {
       setLoading(false);
     }
