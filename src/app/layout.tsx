@@ -18,13 +18,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
       <body className={pressStart2P.className}>
-        {children}
+        <div className="mx-auto py-4 sm:py-6 md:py-8">
+          {children}
+        </div>
       </body>
     </html>
   );

@@ -3,6 +3,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Add responsive utilities */
+@layer utilities {
+  .responsive-container {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+}
+
+/* Make form elements responsive */
+@layer components {
+  .form-container {
+    @apply w-full max-w-md mx-auto sm:max-w-lg md:max-w-xl;
+  }
+  
+  .responsive-dialog {
+    @apply w-[90vw] max-w-md md:max-w-xl lg:max-w-2xl;
+  }
+}
+
+/* Responsive text sizing */
+@layer base {
+  h1 {
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold;
+  }
+  
+  h2 {
+    @apply text-xl sm:text-2xl md:text-3xl font-semibold;
+  }
+  
+  p {
+    @apply text-sm sm:text-base;
+  }
+}
+
+/* Ensure tables are responsive */
+.responsive-table {
+  @apply w-full overflow-x-auto;
+}
+
+/* Media query for small screens */
+@media (max-width: 640px) {
+  .hide-on-mobile {
+    display: none;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 .nes-field {
   @apply flex w-full mb-4;
 }

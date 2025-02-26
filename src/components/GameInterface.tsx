@@ -5,8 +5,7 @@ import type { Profile, Attribute, Goal } from '@/db/schema'
 import { GamifyUser } from './GamifyUser'
 import { LoadingScreen } from './LoadingScreen'
 import { GoalListContainer } from './GoalList'
-import {  GoalCreationForm } from './GoalCreationForm'
-
+import { GoalCreationForm } from './GoalCreationForm'
 
 export const GameInterface = () => {
     //modals for profile updates - CRUD
