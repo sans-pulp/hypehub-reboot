@@ -1,6 +1,6 @@
 import { db } from "@/db";  
-import { eq } from "drizzle-orm";
-import { goalsTable, attributesTable, type AttributeReward } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
+import { goalsTable, attributesTable, type AttributeReward, profilesTable, InsertProfile } from "@/db/schema";
 
 export const completeGoal = async (goalId: number, profileId: number) => {
     return await db.transaction(async (tx) => {
@@ -50,3 +50,24 @@ export const completeGoal = async (goalId: number, profileId: number) => {
         return { goal, updatedAttributes };
     });
 }
+
+export const updateProfileById = async (id: number, data: Partial<InsertProfile>) => {
+    const [profile] = await db.update(profilesTable)
+    .set(data)
+    .where(eq(profilesTable.id, id))
+    .returning()
+    return profile
+}
+
+export const addExperiencePoints = async (profileId: number, points: number) => {
+    const [updatedAttributes] = await db.update(attributesTable)
+        .set({
+            experience: sql`${attributesTable.experience} + ${points}`
+        })
+        .where(eq(attributesTable.profileId, profileId))
+        .returning();
+    
+    return updatedAttributes;
+}
+
+

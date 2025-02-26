@@ -1,6 +1,5 @@
 'use client'
 import LoginPage from '@/app/login/page'
-import { useState, useEffect } from 'react'
 
 export const WelcomeScreen = () => {
     return (

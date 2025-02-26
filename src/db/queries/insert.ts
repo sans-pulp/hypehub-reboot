@@ -1,5 +1,5 @@
 import { db } from "@/db";  
-import { attributesTable, goalsTable, profilesTable, InsertAttribute, InsertGoal, InsertProfile } from "@/db/schema";
+import { attributesTable, goalsTable, profilesTable,  InsertGoal, InsertProfile } from "@/db/schema";
 
 export const insertGoal = async (data: InsertGoal) => {
     const [goal] = await db.insert(goalsTable).values(data).returning()

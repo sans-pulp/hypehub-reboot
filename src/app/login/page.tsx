@@ -3,10 +3,14 @@ import { login, register } from './actions'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+interface AuthActionResult {
+    success?: boolean;
+    error?: string;
+}
+
 const LoginPage = () => {
     const [isRegistering, setIsRegistering] = useState(false)
     const [error, setError] = useState('')
-    const router = useRouter()
 
     const toggleRegister = () => {
         console.log('Toggling register state:', !isRegistering) // Debug log
@@ -59,7 +63,7 @@ const LoginForm = ({
     handleSubmit, 
     setError 
 }: { 
-    handleSubmit: (formData: FormData) => Promise<any>,
+    handleSubmit: (formData: FormData) => Promise<AuthActionResult>,
     setError: (error: string) => void
 }) => {
     const router = useRouter(); // Add this line to get router in this component
@@ -111,8 +115,9 @@ const LoginForm = ({
 const RegisterForm = ({ 
     handleRegister,
     setError
+
 }: { 
-    handleRegister: (formData: FormData) => Promise<any>,
+    handleRegister: (formData: FormData) => Promise<AuthActionResult>,
     setError: (error: string) => void
 }) => {
     const router = useRouter(); // Add this line to get router in this component

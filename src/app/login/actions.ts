@@ -2,10 +2,8 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { createInitialProfile } from '@/db/queries/insert'
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import { getProfileByEmail } from '@/db/queries/select'
-import { deleteUser } from '@/db/queries/delete'
+
 
 
 export async function register(formData: FormData) {
