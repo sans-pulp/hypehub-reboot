@@ -1,3 +1,5 @@
+'use server'
+
 import { db } from "@/db";  
 import { eq, sql } from "drizzle-orm";
 import { goalsTable, attributesTable, type AttributeReward, profilesTable, InsertProfile } from "@/db/schema";

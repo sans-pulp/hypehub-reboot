@@ -1,8 +1,8 @@
 'use server'
 
 import { db } from "@/db";  
-import { goalsTable, profilesTable, attributesTable, SelectGoal, SelectProfile } from "@/db/schema";
-import { eq, getTableColumns } from "drizzle-orm";
+import { goalsTable, profilesTable, attributesTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const getGoalsByProfileId = async (id: number) => {
     const goals = await db.select()

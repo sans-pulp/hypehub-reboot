@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { Progress } from './ui/progress'
 
 export const LoadingScreen = () => {
     const [progress, setProgress] = useState(0)
@@ -45,10 +46,10 @@ export const LoadingScreen = () => {
 
     return (
         <div className="flex justify-center items-center min-h-screen p-4">
-            <div className="nes-container is-dark with-title h-120 w-9/12 !border-2 !border-[#209cee]">
+            <div className="nes-container with-title h-120 w-9/12 !border-2 !border-[#209cee]">
                 <h1 className="title">{loadingText[messageIndex]}</h1>
-                {progress < 99 && <progress className="nes-progress is-pattern" value={progress} max="100"></progress>}
-                {progress >= 99 && <progress className="nes-progress is-primary" value={progress} max="100"></progress>}
+                {progress < 99 && <Progress className="[&>div]:bg-[#209cee] animate-pulse" value={progress}></Progress>}
+                {progress >= 99 && <Progress className="[&>div]:bg-[#209cee]" value={progress} ></Progress>}
             </div>
         </div>
     )

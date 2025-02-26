@@ -4,7 +4,8 @@ import { getCurrentUserData } from '@/utils/auth'
 import type { Profile, Attribute, Goal } from '@/db/schema'
 import { GamifyUser } from './GamifyUser'
 import { LoadingScreen } from './LoadingScreen'
-import { TaskList } from './TaskList'
+import { GoalListContainer } from './GoalList'
+import {  GoalCreationForm } from './GoalCreationForm'
 
 
 export const GameInterface = () => {
@@ -52,7 +53,8 @@ return (
     <div className='game-world nes-container h-screen w-screen is-dark with-title'>
         <h1 className='title'>HypeHub</h1>
         <GamifyUser userProfile={userProfile} userAttributes={userAttributes} />
-        <TaskList goals={userGoals || []} profileId={userProfile?.id || 0} onTaskComplete={() => {}} />
+        <GoalListContainer goals={userGoals || []} profileId={userProfile?.id || 0} onGoalComplete={() => {}} />
+        <GoalCreationForm profileId={userProfile!.id} />
     </div>
 )
 }
