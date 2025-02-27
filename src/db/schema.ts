@@ -36,6 +36,8 @@ export const goalsTable = pgTable('goals', {
     updatedAt: timestamp('updated_at').notNull().$onUpdate(() => new Date()),
     attributes: text('attributes').array(),
     profileId: integer('profile_id').references(() => profilesTable.id),
+    targetDate: timestamp('target_date'),
+    completedAt: timestamp('completed_at'),
 })
 
 export const attributesTable = pgTable('attributes', {

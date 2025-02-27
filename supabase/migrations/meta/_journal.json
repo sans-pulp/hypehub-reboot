@@ -15,6 +15,13 @@
       "when": 1740450450810,
       "tag": "0001_cuddly_the_hood",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740601043154,
+      "tag": "0002_absurd_epoch",
+      "breakpoints": true
     }
   ]
 }
