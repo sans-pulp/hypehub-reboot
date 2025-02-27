@@ -10,7 +10,9 @@ export default defineConfig({
     schema: './src/db/schema.ts',
     out: './supabase/migrations',
     dbCredentials: {
-        url: process.env.DATABASE_URL!,
+        // connectionString: process.env.SESSION_POOL_URL!,
+        url: process.env.DATABASE_SESSION_POOL_URL!,
+        
     },
     verbose: true,
     strict: true,
