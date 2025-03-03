@@ -1,15 +1,15 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss'
 
 export default {
-    darkMode: ["class"],
+    darkMode: ['class'],
     content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+      './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+      './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+      './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    ],
   theme: {
-  	extend: {
-  		colors: {
+    extend: {
+      colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -49,7 +49,34 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+			game: {
+				attribute: {
+					strength: '#cc2936',    // Blood Red - physical power
+					knowledge: '#209cee',   // Sky Blue - mental acuity
+					vitality: '#92cc41',    // Forest Green - health/stamina
+					social: '#fdca40',      // Warm Yellow - charisma/influence
+					willpower: '#4a4a4a'    // Steel Gray - mental fortitude
+				},
+				status: {
+					damage: '#ff0000',      // Pure Red - negative effects
+					heal: '#4c8162',        // Sage Green - recovery
+					buff: '#e76e55',        // Coral Orange - enhancements
+					debuff: '#f7d51d'       // Warning Yellow - penalties
+				},
+				rarity: {
+					common: '#4a4a4a',      // Gray - basic items
+					uncommon: '#92cc41',    // Green - slightly special
+					rare: '#209cee',        // Blue - valuable
+					epic: '#e76e55',        // Orange - very rare
+					legendary: '#f7d51d'    // Gold - ultimate tier
+				},
+				goal: {
+					daily: '#92cc41',       // Green - regular tasks
+					mission: '#209cee',     // Blue - medium-term
+					quest: '#e76e55'        // Orange - epic long-term
+				}
+			},
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
