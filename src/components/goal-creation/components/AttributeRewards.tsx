@@ -19,7 +19,7 @@ export const AttributeRewards = ({
       {attributes.map(attr => (
         <div key={attr} className="flex items-center mb-3">
           <Badge 
-            className={`w-40 mr-4 ${ATTRIBUTE_COLORS[attr as keyof typeof ATTRIBUTE_COLORS]} justify-center text-sm capitalize`}
+            className={`w-40 mr-4 ${ATTRIBUTE_COLORS[attr as keyof typeof ATTRIBUTE_COLORS]} flex justify-center text-sm capitalize`}
           >
             {attr}
           </Badge>

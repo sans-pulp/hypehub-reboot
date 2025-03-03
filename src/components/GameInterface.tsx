@@ -49,7 +49,7 @@ export const GameInterface = () => {
     }
 
 return (
-    <div className='game-world nes-container h-screen w-screen is-dark with-title'>
+    <div className='game-world nes-container h-screen w-screen is-dark with-title !m-0'>
         <h1 className='title'>HypeHub</h1>
         <GamifyUser userProfile={userProfile} userAttributes={userAttributes} />
         <GoalListContainer goals={userGoals || []} profileId={userProfile?.id || 0} onGoalComplete={() => {}} />

@@ -11,7 +11,7 @@ import { SelectGoalTypeProps } from "../types"
 
 export  const SelectGoalType = ({ setGoalType }: SelectGoalTypeProps) => {
     return (
-      <Select onValueChange={setGoalType}>
+      <Select onValueChange={setGoalType} defaultValue={GOAL_TYPES[0]}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select goal type" />
         </SelectTrigger>

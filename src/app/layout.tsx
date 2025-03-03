@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={pressStart2P.className}>
-        <div className="mx-auto py-4 sm:py-6 md:py-8">
+        <div className="mx-auto overflow-hidden">
           {children}
         </div>
       </body>

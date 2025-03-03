@@ -52,29 +52,29 @@ export default {
   			},
 			game: {
 				attribute: {
-					strength: '#cc2936',    // Blood Red - physical power
-					knowledge: '#209cee',   // Sky Blue - mental acuity
-					vitality: '#92cc41',    // Forest Green - health/stamina
-					social: '#fdca40',      // Warm Yellow - charisma/influence
-					willpower: '#4a4a4a'    // Steel Gray - mental fortitude
+					strength: '#CC2936',    // Blood red - physical power and raw force
+					knowledge: '#3B82F6',   // Sky blue - mental acuity and learning
+					vitality: '#22C55E',    // Forest green - health and endurance
+					social: '#F59E0B',      // Warm yellow - charisma and connection
+					willpower: '#1E293B',   // Deep blue gray - deep concentration and resolve
 				},
 				status: {
-					damage: '#ff0000',      // Pure Red - negative effects
-					heal: '#4c8162',        // Sage Green - recovery
-					buff: '#e76e55',        // Coral Orange - enhancements
-					debuff: '#f7d51d'       // Warning Yellow - penalties
+					damage: '#E63946',      // Soft crimson - dangerous but not harsh
+					heal: '#4C8162',        // Sage green - soothing and natural
+					buff: '#F58C57',        // Coral orange - warm and energetic
+					debuff: '#457B9D'       // Steel blue - cold and hindering
 				},
 				rarity: {
-					common: '#4a4a4a',      // Gray - basic items
-					uncommon: '#92cc41',    // Green - slightly special
-					rare: '#209cee',        // Blue - valuable
-					epic: '#e76e55',        // Orange - very rare
-					legendary: '#f7d51d'    // Gold - ultimate tier
+					common: '#7E8A9A',      // Steel gray - basic but not dull
+					uncommon: '#45B669',    // Emerald green - fresh and distinct
+					rare: '#4481E5',        // Electric blue - bright and valuable
+					epic: '#A241E8',        // Royal purple - mystical and rare
+					legendary: '#D5A536'    // Gold - the rarest and most exclusive
 				},
 				goal: {
-					daily: '#92cc41',       // Green - regular tasks
-					mission: '#209cee',     // Blue - medium-term
-					quest: '#e76e55'        // Orange - epic long-term
+					daily: '#4CC7AF',       // Turquoise - fresh, approachable, everyday
+					mission: '#7B6CF6',     // Royal purple - important, challenging
+					quest: '#E74694'        // Magenta - epic, prestigious, standout
 				}
 			},
   		},

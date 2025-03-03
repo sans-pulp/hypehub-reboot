@@ -2,11 +2,11 @@
 export const GOAL_TYPES = ['Daily', 'Mission', 'Quest'] as const;
 
 export const ATTRIBUTE_COLORS = {
-  strength: 'bg-[#cc2936]',
-  vitality: 'bg-[#92cc41]',
-  knowledge: 'bg-[#209cee]',
-  social: 'bg-[#fdca40]',
-  willpower: 'bg-[#4a4a4a]',
+  strength: 'bg-game-attribute-strength',
+  vitality: 'bg-game-attribute-vitality',
+  knowledge: 'bg-game-attribute-knowledge',
+  social: 'bg-game-attribute-social',
+  willpower: 'bg-game-attribute-willpower',
 }   as const;
 
 export const MIN_ATTRIBUTE_POINTS = 1;
