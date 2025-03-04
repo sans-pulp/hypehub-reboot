@@ -1,11 +1,12 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { getCurrentUserData } from '@/utils/auth'
 import type { Profile, Attribute, Goal } from '@/db/schema'
 import { GamifyUser } from '@/components/GamifyUser'
 import { LoadingScreen } from '@/components/LoadingScreen'
 import { GoalListContainer } from '@/components/GoalList'
 import { GoalCreationForm } from '@/components/goal-creation/GoalCreationForm'
+import { useWebSocket } from '@/hooks/useWebsocket'
 
 export const GameInterface = () => {
     //modals for profile updates - CRUD
@@ -16,7 +17,46 @@ export const GameInterface = () => {
     const [userAttributes, setUserAttributes] = useState<Attribute | null>(null);
     const [userGoals, setUserGoals] = useState<Goal[] | null>(null);
     const [loading, setLoading] = useState(true);
+    const {isConnected, events, sendHypeHubEvent} = useWebSocket('ws://localhost:8080')
 
+
+    // Handle incoming WebSocket events
+    useEffect(() => {
+        if (!events?.length) return; // Guard against empty events array
+        
+        const latestEvent = events[events.length - 1];
+        // Guard against undefined event and ensure it matches HypeHubEvents type
+        if (!latestEvent?.type || !latestEvent?.payload) {
+            console.warn('Received malformed event:', latestEvent);
+            return;
+        }
+
+        switch (latestEvent.type) {
+            case 'SYSTEM':
+                console.log("System message:", latestEvent.payload);
+                break;
+            case 'LEVEL_UP':
+                console.log("Level up event received", latestEvent.payload);
+                // setUserAttributes((prev) => prev ? {
+                //     ...prev,
+                //     ...latestEvent.payload
+                // } : null);
+                break;
+            case 'ACHIEVEMENT':
+                console.log("Achievement event received", latestEvent.payload);
+                break;
+            case 'GOAL_COMPLETED':
+                console.log("Goal completed event received", latestEvent.payload);
+                break;
+            case 'CHAT_MESSAGE':
+                console.log("Chat message received", latestEvent.payload);
+                break;
+            default:
+                console.warn('Unknown event type:', latestEvent.type);
+        }
+    }, [events]);
+
+    // Fetch initial user data
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -51,8 +91,40 @@ export const GameInterface = () => {
 return (
     <div className='game-world nes-container h-screen w-screen is-dark with-title !m-0'>
         <h1 className='title'>HypeHub</h1>
-        <GamifyUser userProfile={userProfile} userAttributes={userAttributes} />
-        <GoalListContainer goals={userGoals || []} profileId={userProfile?.id || 0} onGoalComplete={() => {}} />
+        
+        {/* Add connection status and test button */}
+        <div className="nes-container is-rounded">
+            <p>WebSocket Status: {isConnected ? '🟢 Connected' : '🔴 Disconnected'}</p>
+            <button 
+                className="nes-btn is-primary" 
+                onClick={() => {
+                    console.log('Sending test message...');
+                    sendHypeHubEvent({
+                        type: 'SYSTEM',
+                        payload: { message: 'Test message from client', timestamp: new Date().toISOString() }
+                    });
+                }}
+            >
+                Send Test Message
+            </button>
+        </div>
+
+        <GamifyUser 
+            userProfile={userProfile} 
+            userAttributes={userAttributes} 
+            onLevelUp={(newLevel) => {
+                sendHypeHubEvent({
+                    type: 'LEVEL_UP',
+                    payload: { id: userProfile?.id, level: newLevel }
+                })
+            }} 
+        />
+        <GoalListContainer goals={userGoals || []} profileId={userProfile?.id || 0} onGoalComplete={(goalId) => {
+            sendHypeHubEvent({
+                type: 'GOAL_COMPLETED',
+                payload: { userId: userProfile?.id, goalId }
+            })
+        }} />
         <GoalCreationForm profileId={userProfile!.id} />
     </div>
 )

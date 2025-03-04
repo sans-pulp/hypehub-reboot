@@ -1,62 +1,58 @@
 import { WebSocketServer, WebSocket } from 'ws'
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080
-const wss = new WebSocketServer({port: PORT})
+const HEARTBEAT_INTERVAL = 30000 // 30 seconds
 
-// Extend WebSocket type to include our custom property
-interface HypeHubWebSocket extends WebSocket {
+interface CustomWebSocket extends WebSocket {
     isAlive: boolean;
 }
 
-const HEARTBEAT_INTERVAL = 30000; // 30 seconds
+const wss = new WebSocketServer({ port: PORT })
 
-wss.on('connection', (ws: HypeHubWebSocket) => {
+wss.on('connection', (ws: CustomWebSocket) => {
     console.log('Client connected')
-
-    // on initial connection, set isAlive to true
-    ws.isAlive = true;
-    ws.on('pong', () => ws.isAlive = true);
-
-    // handle incoming messages
+    
+    // Set up connection state
+    ws.isAlive = true
+    ws.on('pong', () => {
+        ws.isAlive = true
+        console.log('Received pong from client')
+    })
+    
+    // Handle messages
     ws.on('message', (data) => {
-        console.log(`Received message => ${data.toString()}`)
-        // echo/broadcast message to all clients
-        wss.clients.forEach((client) => {
-            if (client.readyState === ws.OPEN) {
-                client.send(`Broadcast: ${data.toString()}`)
-            }
-        }) 
+        console.log('Received raw message:', data.toString())
+        try {
+            const message = JSON.parse(data.toString())
+            console.log('Parsed message:', message)
+            
+            // Broadcast to all connected clients
+            wss.clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify(message))
+                }
+            })
+        } catch (error) {
+            console.warn('Invalid message received:', error)
+        }
     })
-    // handle errors
+
+    // Handle disconnection
+    ws.on('close', () => console.log('Client disconnected'))
     ws.on('error', console.error)
-
-    // send initial message
-    ws.send('Hello from server!')
-
-    // handle client DC
-    ws.on('close', () => {
-        console.log('Client disconnected')
-    })
-
 })
 
-// setup heartbeat interval for clients
-const heartbeatInterval = setInterval(() => {
+// Heartbeat check
+setInterval(() => {
     wss.clients.forEach((ws) => {
-        const hypehubWs = ws as HypeHubWebSocket;
-        if (hypehubWs.isAlive) {
-            hypehubWs.ping()
-            hypehubWs.isAlive = false;
+        if (!(ws as CustomWebSocket).isAlive) {
+            console.log('Terminating inactive client')
+            return ws.terminate()
         }
-        else {
-            console.log('Client terminated due to failed heartbeat');
-            hypehubWs.terminate();
-        }
+        (ws as CustomWebSocket).isAlive = false
+        ws.ping()
+        console.log('Sent ping to client')
     })
-}, HEARTBEAT_INTERVAL);
+}, HEARTBEAT_INTERVAL)
 
-// clear interval on server close
-wss.on('close', () => {
-    clearInterval(heartbeatInterval);
-})
-console.log(`WebSocket server is running on wss://localhost:${PORT}`)
+console.log(`WebSocket server running on ws://localhost:${PORT}`)

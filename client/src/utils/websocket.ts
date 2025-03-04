@@ -1,56 +1,47 @@
-export type HypeHubEvents = {
-    type: 'LEVEL_UP' | 'ACHIEVEMENT' | 'GOAL_COMPLETED' | 'CHAT_MESSAGE';
+export type HypeHubEvent = {
+    type: 'SYSTEM' | 'LEVEL_UP' | 'ACHIEVEMENT' | 'GOAL_COMPLETED' | 'CHAT_MESSAGE';
     payload: any;
-};
+}
 
 type WebSocketHandlers = {
-    onMessage?: (event: MessageEvent<HypeHubEvents>) => void;
+    onMessage?: (event: HypeHubEvent) => void;
     onOpen?: () => void;
     onClose?: () => void;
-    onError?: (error: ErrorEvent) => void;
-};
-
-const PING_TIMEOUT = 31000; // 30 seconds + 1 second grace period to account for latency
+    onError?: (error: Event) => void;
+}
 
 export const createWebSocket = (url: string, handlers: WebSocketHandlers = {}) => {
-    const ws = new WebSocket(url);
-    let pingTimeout: NodeJS.Timeout;
-
-    const heartbeat = () => {
-        clearTimeout(pingTimeout);
-        
-        pingTimeout = setTimeout(() => {
-            console.log('connection lost, terminating connection');
-            ws.close();
-        }, PING_TIMEOUT);
-    }
+    const ws = new WebSocket(url)
     
+    // Handle messages
     ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        handlers.onMessage?.(data);
+        try {
+            const data = JSON.parse(event.data)
+            const message: HypeHubEvent = {
+                type: data.type || 'SYSTEM',
+                payload: data.payload || data
+            }
+            handlers.onMessage?.(message)
+        } catch (error) {
+            console.warn('Failed to parse message:', error)
+        }
     }
-    ws.onopen = () => {
-        handlers.onOpen?.(); 
-        heartbeat(); // start heartbeat on connection
-    }
-  
-    ws.onclose = () =>{ 
-        clearTimeout(pingTimeout); // clean up timeout on close
-        handlers.onClose?.(); 
-    }
-    ws.onerror = (error) => {
-        clearTimeout(pingTimeout); // clean up timeout on error
-        handlers.onError?.(error as ErrorEvent);
-    }
-    // handle server pings
-    ws.addEventListener('ping', heartbeat);
 
+    // Handle connection events
+    ws.onopen = () => handlers.onOpen?.()
+    ws.onclose = () => handlers.onClose?.()
+    ws.onerror = (error) => handlers.onError?.(error)
+
+    // Return WebSocket interface
     return {
-        send: (message: HypeHubEvents) => ws.readyState === WebSocket.OPEN && ws.send(JSON.stringify(message)),
-        close: () => {
-            clearTimeout(pingTimeout);
-            ws.close()
+        send: (message: HypeHubEvent): boolean => {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(message))
+                return true
+            }
+            return false
         },
+        close: () => ws.close(),
         getStatus: () => ws.readyState
-    };
-};
+    }
+}
