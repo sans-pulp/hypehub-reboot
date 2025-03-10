@@ -7,29 +7,27 @@ import { LoadingScreen } from '@/components/LoadingScreen'
 import { GoalListContainer } from '@/components/GoalList'
 import { GoalCreationForm } from '@/components/goal-creation/GoalCreationForm'
 import { useWebSocket } from '@/hooks/useWebsocket'
-
+import { PresenceIndicator } from './PresenceIndicator'
+import { useWebSocketContext } from '@/WebSocketContext'
+import { toast } from 'sonner'
+import { HypeHubEvent } from '@/utils/websocket'
 export const GameInterface = () => {
     //modals for profile updates - CRUD
     // modal for settings? -- maybe theme, language, music, etc.
-    // modal for notifications? -- maybe for when a user completes a goal, or when a user completes a task, or when a user completes a challenge, or when a user completes a quest, or when a user completes a milestone, or when a user completes a level, 
+    // modal for notifications? -- maybe for when a user completes a goal, or when a user completes a level, 
     // what's on this page? - character/profile info, tasks - daily, mission, quests, progress bars, battle theme music
+    console.log('GameInterface mounting...')
     const [userProfile, setUserProfile] = useState<Profile | null>(null);
     const [userAttributes, setUserAttributes] = useState<Attribute | null>(null);
     const [userGoals, setUserGoals] = useState<Goal[] | null>(null);
     const [loading, setLoading] = useState(true);
-    const {isConnected, events, sendHypeHubEvent} = useWebSocket('ws://localhost:8080')
+    const {isConnected, send, latestEvent} = useWebSocketContext()
 
 
     // Handle incoming WebSocket events
     useEffect(() => {
-        if (!events?.length) return; // Guard against empty events array
-        
-        const latestEvent = events[events.length - 1];
-        // Guard against undefined event and ensure it matches HypeHubEvents type
-        if (!latestEvent?.type || !latestEvent?.payload) {
-            console.warn('Received malformed event:', latestEvent);
-            return;
-        }
+        if (!isConnected) return;
+        if (!latestEvent) return;
 
         switch (latestEvent.type) {
             case 'SYSTEM':
@@ -37,24 +35,41 @@ export const GameInterface = () => {
                 break;
             case 'LEVEL_UP':
                 console.log("Level up event received", latestEvent.payload);
-                // setUserAttributes((prev) => prev ? {
-                //     ...prev,
-                //     ...latestEvent.payload
-                // } : null);
+                break;
+            case 'GOAL_COMPLETED':
+                console.log("Goal completed event received", latestEvent.payload);
+                toast(
+                    <ToastComponent latestEvent={latestEvent} />,
+                    {
+                        className: "!p-4 !bg-transparent",
+                        position: 'top-right',
+                        style: {
+                            background: '#212529',
+                            border: '4px solid #fff',
+                            color: '#fff',
+                            borderRadius: '0px',
+                            boxShadow: 'none',
+                            imageRendering: 'pixelated'
+                        },
+                        // duration: 10000
+                    }
+                )
                 break;
             case 'ACHIEVEMENT':
                 console.log("Achievement event received", latestEvent.payload);
                 break;
-            case 'GOAL_COMPLETED':
-                console.log("Goal completed event received", latestEvent.payload);
-                break;
             case 'CHAT_MESSAGE':
                 console.log("Chat message received", latestEvent.payload);
+                break;
+            case 'PRESENCE_UPDATE':
+                console.log("Presence update received", latestEvent.payload);
                 break;
             default:
                 console.warn('Unknown event type:', latestEvent.type);
         }
-    }, [events]);
+
+    }, [isConnected, latestEvent])
+   
 
     // Fetch initial user data
     useEffect(() => {
@@ -82,7 +97,9 @@ export const GameInterface = () => {
         }
 
         fetchUser()
-    }, [])
+    }, [ ])
+
+
 
     if (loading) {
         return <LoadingScreen />
@@ -91,6 +108,7 @@ export const GameInterface = () => {
 return (
     <div className='game-world nes-container h-screen w-screen is-dark with-title !m-0'>
         <h1 className='title'>HypeHub</h1>
+        <PresenceIndicator />
         
         {/* Add connection status and test button */}
         <div className="nes-container is-rounded">
@@ -99,9 +117,9 @@ return (
                 className="nes-btn is-primary" 
                 onClick={() => {
                     console.log('Sending test message...');
-                    sendHypeHubEvent({
+                    send({
                         type: 'SYSTEM',
-                        payload: { message: 'Test message from client', timestamp: new Date().toISOString() }
+                        payload: { message: 'Test message from client', timestamp: new Date().toISOString(), userId: userProfile?.id, displayName: userProfile?.firstName + ' ' + userProfile?.lastName }
                     });
                 }}
             >
@@ -113,16 +131,16 @@ return (
             userProfile={userProfile} 
             userAttributes={userAttributes} 
             onLevelUp={(newLevel) => {
-                sendHypeHubEvent({
+                send({
                     type: 'LEVEL_UP',
-                    payload: { id: userProfile?.id, level: newLevel }
+                    payload: { id: userProfile?.id, level: newLevel, userId: userProfile?.id, displayName: userProfile?.firstName + ' ' + userProfile?.lastName }
                 })
             }} 
         />
         <GoalListContainer goals={userGoals || []} profileId={userProfile?.id || 0} onGoalComplete={(goalId) => {
-            sendHypeHubEvent({
+            send({
                 type: 'GOAL_COMPLETED',
-                payload: { userId: userProfile?.id, goalId }
+                payload: { goalName: userGoals?.find(goal => goal.id === goalId)?.name, timestamp: new Date().toLocaleString(), userId: userProfile?.id, goalType: userGoals?.find(goal => goal.id === goalId)?.type }
             })
         }} />
         <GoalCreationForm profileId={userProfile!.id} />
@@ -130,6 +148,22 @@ return (
 )
 }
 
+const ToastComponent = ({latestEvent}: {latestEvent: HypeHubEvent}) => {
+    return (
+        <div className="pixel-text">
+            <div className="flex items-center gap-2">
+                <i className="nes-icon trophy is-small"></i>
+                <span className="nes-text is-success">Quest Complete!</span>
+            </div>
+            <div className="nes-text is-warning mt-2">
+                {latestEvent.payload.goalName}
+            </div>
+            <div className="nes-text is-primary mt-1">
+                {latestEvent.payload.goalType} goal achieved!
+            </div>
+        </div>
+    )
+}
 
 
 
