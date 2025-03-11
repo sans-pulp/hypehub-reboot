@@ -10,6 +10,7 @@ import { PresenceIndicator } from "./PresenceIndicator";
 import { useWebSocketContext } from "@/WebSocketContext";
 import { toast } from "sonner";
 import { HypeHubEvent, GoalCompletedPayload } from "@/utils/websocket";
+import { LogoutButton } from "@/components/LogoutButton";
 export const GameInterface = () => {
   //modals for profile updates - CRUD
   // modal for settings? -- maybe theme, language, music, etc.
@@ -29,16 +30,16 @@ export const GameInterface = () => {
 
     switch (latestEvent.type) {
       case "SYSTEM":
-        console.log("System message:", latestEvent.payload);
+        // console.log("System message:", latestEvent.payload);
         break;
       case "LEVEL_UP":
-        console.log("Level up event received", latestEvent.payload);
+        // console.log("Level up event received", latestEvent.payload);
         break;
       case "GOAL_COMPLETED":
-        console.log("Goal completed event received", latestEvent.payload);
+        // console.log("Goal completed event received", latestEvent.payload);
         toast(<ToastComponent latestEvent={latestEvent} />, {
           className: "!p-4 !bg-transparent",
-          position: "top-right",
+          position: "bottom-right",
           style: {
             background: "#212529",
             border: "4px solid #fff",
@@ -51,7 +52,7 @@ export const GameInterface = () => {
         });
         break;
       case "ACHIEVEMENT":
-        console.log("Achievement event received", latestEvent.payload);
+        // console.log("Achievement event received", latestEvent.payload);
         break;
       case "CHAT_MESSAGE":
         console.log("Chat message received", latestEvent.payload);
@@ -96,14 +97,23 @@ export const GameInterface = () => {
     setUserGoals(goals);
   };
 
+  const handleLogoutError = () => {
+    toast.error("Error logging out");
+  }
+
   if (loading) {
     return <LoadingScreen />;
   }
+
+  
 
   return (
     <div className="game-world nes-container min-h-screen w-screen is-dark with-title !m-0">
       <h1 className="title">HypeHub</h1>
       <PresenceIndicator />
+      <div className="flex justify-end">
+        <LogoutButton errorCallback={handleLogoutError}/>
+      </div>
 
       {/* Add connection status and test button */}
       <div className="nes-container is-rounded">

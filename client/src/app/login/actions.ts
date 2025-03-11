@@ -8,7 +8,7 @@ import { getProfileByEmail } from '../../db/queries/select'
 
 export async function register(formData: FormData) {
   const supabase = await createClient()
-  console.log("formData", formData)
+  // console.log("formData", formData)
   
   const email = formData.get('email')?.toString()
   const password = formData.get('password')?.toString()
@@ -34,7 +34,7 @@ export async function register(formData: FormData) {
   }
 
   try {
-    console.log('Creating profile for new user...')
+    // console.log('Creating profile for new user...')
     await createInitialProfile(email, firstName, lastName)
     // reval
   } catch (error) {
@@ -76,7 +76,14 @@ export async function login(formData: FormData) {
   return { success: true }
 }
 
-
+export const logout = async () => {
+  const supabase = await createClient()
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    console.error('Logout error:', error)
+  }
+  return { success: true }
+}
 
 
 
