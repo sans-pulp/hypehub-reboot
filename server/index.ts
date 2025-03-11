@@ -1,5 +1,5 @@
 import { WebSocketServer, WebSocket } from 'ws'
-import { HypeHubEvent, PresencePayload } from '../client/src/utils/websocket'
+import { HypeHubEvent, PresencePayload } from './types'
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080
 const HEARTBEAT_INTERVAL = 30000 // 30 seconds
