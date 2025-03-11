@@ -9,7 +9,7 @@ import { GoalCreationForm } from '@/components/goal-creation/GoalCreationForm'
 import { PresenceIndicator } from './PresenceIndicator'
 import { useWebSocketContext } from '@/WebSocketContext'
 import { toast } from 'sonner'
-import { HypeHubEvent } from '@/utils/websocket'
+import { HypeHubEvent, GoalCompletedPayload } from '@/utils/websocket'
 export const GameInterface = () => {
     //modals for profile updates - CRUD
     // modal for settings? -- maybe theme, language, music, etc.
@@ -118,7 +118,7 @@ return (
                     console.log('Sending test message...');
                     send({
                         type: 'SYSTEM',
-                        payload: { message: 'Test message from client', timestamp: new Date().toISOString(), userId: userProfile?.id, displayName: userProfile?.firstName + ' ' + userProfile?.lastName }
+                        payload: { message: 'Test message from client', timestamp: new Date().toISOString(), userId: userProfile!.id, displayName: userProfile!.firstName + ' ' + userProfile!.lastName }
                     });
                 }}
             >
@@ -132,22 +132,44 @@ return (
             onLevelUp={(newLevel) => {
                 send({
                     type: 'LEVEL_UP',
-                    payload: { id: userProfile?.id, level: newLevel, userId: userProfile?.id, displayName: userProfile?.firstName + ' ' + userProfile?.lastName }
-                })
+                    payload: {
+                        level: newLevel,
+                        userId: userProfile!.id,
+                        displayName: `${userProfile!.firstName} ${userProfile!.lastName}`
+                    }
+                });
             }} 
         />
-        <GoalListContainer goals={userGoals || []} profileId={userProfile?.id || 0} onGoalComplete={(goalId) => {
-            send({
-                type: 'GOAL_COMPLETED',
-                payload: { goalName: userGoals?.find(goal => goal.id === goalId)?.name, timestamp: new Date().toLocaleString(), userId: userProfile?.id, goalType: userGoals?.find(goal => goal.id === goalId)?.type }
-            })
-        }} />
+        <GoalListContainer 
+            goals={userGoals || []} 
+            profileId={userProfile!.id} 
+            onGoalComplete={(goalId) => {
+                const goal = userGoals?.find(goal => goal.id === goalId);
+                if (!goal) {
+                    console.warn('Goal not found, cannot send goal completion event');
+                    return;
+                }
+                
+                send({
+                    type: 'GOAL_COMPLETED',
+                    payload: {
+                        goalName: goal!.name,
+                        timestamp: new Date().toLocaleString(),
+                        userId: userProfile!.id,
+                        goalType: goal!.type
+                    }
+                });
+            }} 
+        />
         <GoalCreationForm profileId={userProfile!.id} />
     </div>
 )
 }
 
 const ToastComponent = ({latestEvent}: {latestEvent: HypeHubEvent}) => {
+    if (latestEvent.type !== 'GOAL_COMPLETED') return null;
+    const payload = latestEvent.payload as GoalCompletedPayload;
+    
     return (
         <div className="pixel-text">
             <div className="flex items-center gap-2">
@@ -155,14 +177,14 @@ const ToastComponent = ({latestEvent}: {latestEvent: HypeHubEvent}) => {
                 <span className="nes-text is-success">Quest Complete!</span>
             </div>
             <div className="nes-text is-warning mt-2">
-                {latestEvent.payload.goalName}
+                {payload.goalName}
             </div>
             <div className="nes-text is-primary mt-1">
-                {latestEvent.payload.goalType} goal achieved!
+                {payload.goalType} goal achieved!
             </div>
         </div>
-    )
-}
+    );
+};
 
 
 

@@ -8,19 +8,18 @@ declare global {
 export interface SystemPayload {
     message: string;
     timestamp: string;
-    userId?: string;
+    userId?: number;
     displayName?: string;
 }
 
 export interface LevelUpPayload {
-    id: number;
     level: number;
-    userId: string;
+    userId: number;
     displayName: string;
 }
 
 export interface AchievementPayload {
-    userId: string;
+    userId: number;
     achievementName: string;
     timestamp: string;
 }
@@ -28,12 +27,12 @@ export interface AchievementPayload {
 export interface GoalCompletedPayload {
     goalName: string;
     timestamp: string;
-    userId: string;
+    userId: number;
     goalType: string;
 }
 
 export interface ChatMessagePayload {
-    userId: string;
+    userId: number;
     displayName: string;
     message: string;
     timestamp: string;
@@ -41,7 +40,7 @@ export interface ChatMessagePayload {
 
 export interface PresencePayload {
     type: 'join' | 'leave';
-    userId: string;
+    userId: number;
     displayName: string;
     timestamp: string;
     connectedUsers: number;

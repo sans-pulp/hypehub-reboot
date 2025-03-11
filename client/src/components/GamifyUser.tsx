@@ -1,8 +1,8 @@
 'use client'
 import type { Profile, Attribute } from '@/db/schema'
 
-export const GamifyUser = ({userProfile, userAttributes}: {userProfile: Profile | null, userAttributes: Attribute | null}) => {
-  
+export const GamifyUser = ({userProfile, userAttributes, onLevelUp}: {userProfile: Profile | null, userAttributes: Attribute | null, onLevelUp: (newLevel: number) => void}) => {
+  console.log("onLevelUp", onLevelUp)
     return (
         <div className="flex flex-row items-center justify-center mt-5 mb-5">
             <div className="nes-container h-fit w-fit !border-2 !border-[#209cee]">
