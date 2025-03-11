@@ -2,20 +2,33 @@
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
 import { useWebSocketContext } from '@/WebSocketContext'
+import { useEffect, useState } from 'react'
+import { ConnectedUsersCountPayload } from '@/utils/websocket'
 
 export const PresenceIndicator = () => {
-    const {isConnected} = useWebSocketContext()
+    const {isConnected, latestEvent} = useWebSocketContext()
+    // get connected users from ConnectedUsersCountPayload
+    const [connectedUsers, setConnectedUsers] = useState<number>(0)
+
+    useEffect(() => {
+        if (latestEvent) {
+            if (latestEvent.type === 'CONNECTED_USERS_COUNT') {
+                const payload = latestEvent.payload as ConnectedUsersCountPayload
+                setConnectedUsers(payload.count)
+            }
+        }
+    }, [latestEvent])
 
     return (
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div className='flex items-center gap-2'>
-                        <Badge variant="secondary">Status</Badge>
+                        <Badge variant="secondary">Server Status</Badge>
                     </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                    {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
+                    {isConnected ? `🟢 Connected: ${connectedUsers} users` : '🔴 Disconnected'}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

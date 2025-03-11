@@ -1,5 +1,5 @@
 export type HypeHubEvent = {
-    type: 'SYSTEM' | 'LEVEL_UP' | 'ACHIEVEMENT' | 'GOAL_COMPLETED' | 'CHAT_MESSAGE' | 'PRESENCE_UPDATE';
+    type: 'SYSTEM' | 'LEVEL_UP' | 'ACHIEVEMENT' | 'GOAL_COMPLETED' | 'CHAT_MESSAGE' | 'PRESENCE_UPDATE' | 'CONNECTED_USERS_COUNT';
     payload: any;
 }
 
@@ -10,3 +10,8 @@ export interface PresencePayload {
     timestamp: string;
     connectedUsers: number
 } 
+
+export interface ConnectedUsersCountPayload {
+    count: number;
+    timestamp: string;
+}

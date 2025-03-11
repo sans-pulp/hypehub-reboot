@@ -1,5 +1,5 @@
 import { WebSocketServer, WebSocket } from 'ws'
-import { HypeHubEvent, PresencePayload } from './types'
+import { HypeHubEvent, PresencePayload, ConnectedUsersCountPayload } from './types'
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',')
@@ -26,6 +26,7 @@ const startHeartbeat = () => {
     }
 // Heartbeat check
  heartbeatInterval = setInterval(() => {
+    const connectedUsersCount = wss.clients.size
     wss.clients.forEach((ws) => {
         const client = ws as CustomWebSocket
         if (!client.isAlive) {
@@ -35,6 +36,16 @@ const startHeartbeat = () => {
         client.isAlive = false
         client.ping()
         console.log('Sent ping to client')
+
+        // Broadcast connected users count with heartbeat
+        const counterEvent: HypeHubEvent = {
+            type: 'CONNECTED_USERS_COUNT',
+            payload: {
+                count: connectedUsersCount,
+                timestamp: new Date().toISOString()
+            } as ConnectedUsersCountPayload
+        }
+        client.send(JSON.stringify(counterEvent))
     })
 }, HEARTBEAT_INTERVAL)
 }
@@ -64,7 +75,15 @@ startHeartbeat()
 
 wss.on('connection', (ws: CustomWebSocket) => {
     console.log('Client connected')
-    
+    const connectedUsersCount = wss.clients.size
+    const counterEvent: HypeHubEvent = {
+        type: 'CONNECTED_USERS_COUNT',
+        payload: {
+            count: connectedUsersCount,
+            timestamp: new Date().toISOString()
+        } as ConnectedUsersCountPayload
+    }
+    ws.send(JSON.stringify(counterEvent))
     // Set up connection state
     ws.isAlive = true
     ws.on('pong', () => {
