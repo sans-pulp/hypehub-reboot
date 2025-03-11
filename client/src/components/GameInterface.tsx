@@ -115,30 +115,6 @@ export const GameInterface = () => {
         <LogoutButton errorCallback={handleLogoutError}/>
       </div>
 
-      {/* Add connection status and test button */}
-      <div className="nes-container is-rounded">
-        <p>
-          WebSocket Status: {isConnected ? "🟢 Connected" : "🔴 Disconnected"}
-        </p>
-        <button
-          className="nes-btn is-primary"
-          onClick={() => {
-            console.log("Sending test message...");
-            send({
-              type: "SYSTEM",
-              payload: {
-                message: "Test message from client",
-                timestamp: new Date().toISOString(),
-                userId: userProfile!.id,
-                displayName:
-                  userProfile!.firstName + " " + userProfile!.lastName,
-              },
-            });
-          }}
-        >
-          Send Test Message
-        </button>
-      </div>
 
       <GamifyUser
         userProfile={userProfile}
