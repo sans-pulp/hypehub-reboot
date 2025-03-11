@@ -8,11 +8,13 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  
-# environment to run in:
+
 jobs:
-  build-and-deploy:
+  client:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
 
     steps:
       - name: Checkout repository
@@ -28,6 +30,7 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+          cache-dependency-path: 'client/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
@@ -41,5 +44,12 @@ jobs:
       - name: Build
         run: pnpm run build
 
-    
+# TODO: Add server job when WebSocket server is implemented
+# - Build and test server
+# - Docker image creation
+# - Container deployment
+
+# TODO: Add infrastructure job when Terraform configs are ready
+# - Terraform validation
+# - Infrastructure deployment
 
