@@ -3,10 +3,10 @@ import { createContext, useContext } from "react";
 import { useWebSocket } from "./hooks/useWebsocket";
 
 const WebSocketContext = createContext<ReturnType<typeof useWebSocket> | null>(null);
-
+const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8080'   
 export const WebSocketProvider = ({children} : {children: React.ReactNode}) => {
-    const socket = useWebSocket('ws://localhost:8080')
-    console.log("WebSocketProvider mounting...");
+    const socket = useWebSocket(WS_URL)
+    console.log("WebSocketProvider mounting...", WS_URL);
     return (
         <WebSocketContext.Provider value={socket}>
             {children}

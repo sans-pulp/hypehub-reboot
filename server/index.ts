@@ -2,13 +2,21 @@ import { WebSocketServer, WebSocket } from 'ws'
 import { HypeHubEvent, PresencePayload } from './types'
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',')
+
 const HEARTBEAT_INTERVAL = 30000 // 30 seconds
 
 interface CustomWebSocket extends WebSocket {
     isAlive: boolean;
 }
 
-const wss = new WebSocketServer({ port: PORT })
+const wss = new WebSocketServer({ 
+    port: PORT,
+    verifyClient: ({origin}: {origin?: string}) => {
+        if (!origin) return true
+        return ALLOWED_ORIGINS.includes(origin) || ALLOWED_ORIGINS.includes('*')
+    }
+ })
 
 let heartbeatInterval: NodeJS.Timeout | null = null;
 
