@@ -1,7 +1,7 @@
 'use client'
 import type { Profile, Attribute } from '@/db/schema'
 
-export const GamifyUser = ({userProfile, userAttributes, onLevelUp}: {userProfile: Profile | null, userAttributes: Attribute | null, onLevelUp: (newLevel: number) => void}) => {
+export const GamifyUser = ({userProfile, userAttributes}: {userProfile: Profile | null, userAttributes: Attribute | null}) => {
   
     return (
         <div className="flex flex-row items-center justify-center mt-5 mb-5">
