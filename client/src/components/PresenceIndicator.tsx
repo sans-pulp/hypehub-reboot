@@ -11,11 +11,11 @@ export const PresenceIndicator = () => {
     const [connectedUsers, setConnectedUsers] = useState<number>(0)
 
     useEffect(() => {
-        if (latestEvent) {
-            if (latestEvent.type === 'CONNECTED_USERS_COUNT') {
-                const payload = latestEvent.payload as ConnectedUsersCountPayload
-                setConnectedUsers(payload.count)
-            }
+        if (!latestEvent) return;
+        
+        if (latestEvent.type === 'CONNECTED_USERS_COUNT') {
+            const payload = latestEvent.payload as ConnectedUsersCountPayload
+            setConnectedUsers(payload.count)
         }
     }, [latestEvent])
 
