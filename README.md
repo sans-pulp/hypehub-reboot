@@ -16,17 +16,44 @@ HypeHub is a gamified productivity application built with Next.js that turns you
 ![Goal Creation](./screenshots/goal-creation.png)
 *Goal Creation Form with attribute rewards*
 
-
 ## Features
 
 - **Gamified Task Management**: Transform your daily tasks into an RPG-style adventure
-- **Character Progression**: Gain attribute points (Strength, Vitality, Knowledge, Social, Willpower) as you complete tasks
+- **Character Progression**: Level up your character through five core attributes:
+  - **Strength**: Master physical challenges and tasks requiring endurance
+    - Perfect for exercise goals, sports activities, and physical projects
+    - Example: "Complete 30 minutes of weight training" (+3 STR)
+  - **Vitality**: Boost your health and wellness stats
+    - Ideal for health goals, sleep schedule, and maintaining good habits
+    - Example: "Maintain a consistent sleep schedule" (+2 VIT)
+  - **Knowledge**: Increase your wisdom and learning power
+    - Great for study goals, learning new skills, and intellectual pursuits
+    - Example: "Complete a programming tutorial" (+4 KNW)
+  - **Social**: Enhance your charisma and networking abilities
+    - Perfect for networking goals, social events, and communication tasks
+    - Example: "Attend a community meetup" (+3 SOC)
+  - **Willpower**: Strengthen your mental fortitude and discipline
+    - Ideal for breaking bad habits, meditation, and challenging personal goals
+    - Example: "Meditate for 15 minutes" (+2 WIL)
 - **Multiple Goal Types**:
-  - Daily Goals: Regular tasks that reset daily
-  - Missions: Medium-term goals (1-4 weeks)
-  - Quests: Long-term goals (1-12 months)
-- **Attribute System**: Each goal contributes to different character attributes
-- **Real-time Updates**: Built with modern web technologies for a responsive experience
+  - **Daily**: Quick quests that reset daily (1-2 attribute points)
+    - Perfect for building habits and maintaining daily routines
+  - **Missions**: Medium-term challenges (1-4 weeks, 2-3 attribute points)
+    - Ideal for projects and medium-scope achievements
+  - **Quests**: Epic long-term adventures (1-12 months, 3-5 attribute points)
+    - Perfect for life-changing goals and major achievements
+- **Attribute System**: Each completed goal awards attribute points based on type and difficulty
+- **Real-time Features**: 
+  - Live chat with other users
+  - Real-time notifications
+  - User presence tracking
+  - Goal completion celebrations
+
+## Project Structure
+
+This is a monorepo containing:
+- `client/`: Next.js frontend application
+- `server/`: WebSocket server for real-time features
 
 ## Quick Start
 
@@ -37,15 +64,25 @@ pnpm install
 ```
 3. Set up environment variables:
 ```env
+# Client (.env in client/)
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_WEBSOCKET_URL=your_websocket_url
 DATABASE_URL=your_database_url
 DATABASE_SESSION_POOL_URL=your_session_pool_url
 SUPABASE_BUCKET_NAME=your_bucket_name
+
+# Server (.env in server/)
+PORT=8080
+ALLOWED_ORIGINS=http://localhost:3000
 ```
-4. Run the development server:
+4. Start the development servers:
 ```bash
-pnpm dev
+# Start WebSocket server
+pnpm --filter server dev
+
+# Start Next.js client
+pnpm --filter client dev
 ```
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
@@ -58,19 +95,31 @@ pnpm dev
 - **Database**: Supabase with PostgreSQL
 - **Authentication**: Supabase Auth
 - **ORM**: Drizzle
+- **Real-time**: WebSocket server with ws package
 
 ## Development
 
 ### Available Commands
 ```bash
-pnpm dev          # Start development server
-pnpm build        # Build for production
-pnpm start        # Start production server
+# Start both client and server
+pnpm dev
+
+# Client commands (run from client directory)
+cd client
+pnpm dev          # Start Next.js development server
+pnpm build        # Build client for production
+pnpm start        # Start production client
 pnpm lint         # Run linting
 pnpm typecheck    # Run type checking
 pnpm db:gen       # Generate database types
 pnpm db:push      # Push database changes
 pnpm db:studio    # Open database studio
+
+# Server commands (run from server directory)
+cd server
+pnpm dev          # Start WebSocket development server
+pnpm build        # Build server for production
+pnpm start        # Start production server
 ```
 
 ## Roadmap
