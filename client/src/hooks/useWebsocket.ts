@@ -1,7 +1,8 @@
 // Interacting with the functional based createWebSocket in utils/
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { createWebSocket, HypeHubEvent } from '../utils/websocket'
+import { createWebSocket } from '../utils/websocket'
+import { HypeHubEvent } from '@hypehub/types'
 
 export function useWebSocket(url: string) {
     const [isConnected, setIsConnected] = useState(false)

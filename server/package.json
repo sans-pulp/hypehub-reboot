@@ -1,16 +1,20 @@
 {
-    "name": "hypehub-reboot-server",
+    "name": "@hypehub/server",
     "version": "0.1.0",
     "private": true,
     "scripts": {
         "dev": "tsx watch ./index.ts",
         "build": "tsc",
-        "start": "node dist/index.js"
+        "start": "node dist/index.js",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix"
     },
     "dependencies": {
+        "@hypehub/types": "workspace:*",
         "ws": "^8.18.1"
     },
     "devDependencies": {
+        "@eslint/js": "^9.0.0",
         "@types/node": "^22.13.9",
         "@types/ws": "^8.5.14",
         "@typescript-eslint/eslint-plugin": "^8.26.0",
