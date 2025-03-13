@@ -10,7 +10,36 @@ on:
     branches: [main]
 
 jobs:
+  types:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/types
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Install PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: '**/pnpm-lock.yaml'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build types package
+        run: pnpm run build
+
   client:
+    needs: types
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -30,7 +59,7 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: 'client/pnpm-lock.yaml'
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
@@ -43,6 +72,13 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+  verify:
+    needs: [types, client]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify CI
+        run: echo "All checks passed"
 
 # TODO: Add server job when WebSocket server is implemented
 # - Build and test server

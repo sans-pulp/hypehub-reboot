@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd packages/types && pnpm build && cd ../../client && pnpm build",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "github": {
+    "silent": true,
+    "enabled": true,
+    "requiredStatusChecks": ["verify"]
+  }
+} 
