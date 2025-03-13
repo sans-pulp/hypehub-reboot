@@ -9,7 +9,7 @@ import { GoalCreationForm } from "@/components/goal-creation/GoalCreationForm";
 import { PresenceIndicator } from "./PresenceIndicator";
 import { useWebSocketContext } from "@/WebSocketContext";
 import { toast } from "sonner";
-import { HypeHubEvent, GoalCompletedPayload } from "@/utils/websocket";
+import { HypeHubEvent, GoalCompletedPayload } from "@hypehub/types";
 import { LogoutButton } from "@/components/LogoutButton";
 export const GameInterface = () => {
   //modals for profile updates - CRUD

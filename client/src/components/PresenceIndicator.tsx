@@ -1,9 +1,10 @@
+
 'use client'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
 import { useWebSocketContext } from '@/WebSocketContext'
 import { useEffect, useState } from 'react'
-import { ConnectedUsersCountPayload } from '@/utils/websocket'
+import { ConnectedUsersCountPayload } from '@hypehub/types'
 
 export const PresenceIndicator = () => {
     const {isConnected, latestEvent} = useWebSocketContext()

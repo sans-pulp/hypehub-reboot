@@ -1,8 +1,16 @@
 {
     "name": "hypehub-reboot",
     "private": true,
-    "workspaces": [
-        "client",
-        "server"
-    ]
+    "scripts": {
+        "lint": "pnpm -r lint",
+        "lint:fix": "pnpm -r lint:fix"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.0.0",
+        "@next/eslint-plugin-next": "^15.2.2",
+        "@typescript-eslint/eslint-plugin": "^8.26.0",
+        "@typescript-eslint/parser": "^8.26.0",
+        "eslint": "^9.21.0",
+        "globals": "^13.24.0"
+    }
 }
