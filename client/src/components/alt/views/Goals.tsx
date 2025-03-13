@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GoalCreationForm } from "@/components/goal-creation/GoalCreationForm";
+import { EnhancedGoalCreation } from "./EnhancedGoalCreation";
 
 interface GoalsViewProps {
   goals: Goal[] | null;
@@ -21,6 +21,7 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
   >("all");
   const [loading, setLoading] = useState(false);
   const [completingGoalId, setCompletingGoalId] = useState<number | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   if (!goals) return null;
 
@@ -64,10 +65,12 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
           <h2 className="text-2xl font-bold text-white">Your Goals</h2>
           <p className="text-gray-400">Track your progress and level up</p>
         </div>
-        <GoalCreationForm
+        <EnhancedGoalCreation
           profileId={profileId}
           onGoalCreated={() => {
-            // This will be handled by the parent component's state refresh
+            // Trigger a refresh via parent component
+            onGoalComplete(-1); // Using -1 as a signal to just refresh
+            setRefreshTrigger((prev) => prev + 1);
           }}
         />
       </div>

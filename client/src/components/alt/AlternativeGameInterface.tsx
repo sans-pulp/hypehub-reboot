@@ -80,6 +80,27 @@ export const AlternativeGameInterface = () => {
     setGameState((prev) => ({ ...prev, activeView: view }));
   };
 
+  const handleGoalComplete = (goalId: number) => {
+    // If goalId is -1, just refresh data without sending a WebSocket event
+    if (goalId === -1) {
+      fetchUserData();
+      return;
+    }
+
+    const goal = gameState.goals?.find((g) => g.id === goalId);
+    if (!goal) return;
+
+    send({
+      type: "GOAL_COMPLETED",
+      payload: {
+        goalName: goal.name,
+        timestamp: new Date().toISOString(),
+        userId: gameState.profile!.id,
+        goalType: goal.type,
+      },
+    });
+  };
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -111,16 +132,7 @@ export const AlternativeGameInterface = () => {
               <Goals
                 goals={gameState.goals}
                 profileId={gameState.profile.id}
-                onGoalComplete={(goalId) => {
-                  send({
-                    type: "GOAL_COMPLETED",
-                    payload: {
-                      goalId,
-                      userId: gameState.profile!.id,
-                      timestamp: new Date().toISOString(),
-                    },
-                  });
-                }}
+                onGoalComplete={handleGoalComplete}
               />
             )}
           </TabsContent>
