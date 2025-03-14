@@ -1,0 +1,12 @@
+---
+# Server settings
+websocket_domain: hypehubws.duckdns.org
+websocket_port: 8080
+app_dir: /home/hypehub/app
+
+# GitHub settings
+github_repo: sans-pulp/hypehub-reboot
+github_branch: main
+
+# App settings
+allowed_origins: "*"

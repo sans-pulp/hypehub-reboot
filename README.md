@@ -2,20 +2,6 @@
 
 HypeHub is a gamified productivity application built with Next.js that turns your daily tasks into an exciting adventure. Complete goals, gain experience, and watch your character grow!
 
-## Screenshots
-
-![Login Page](./screenshots/login.png)
-*Login Page with retro-styled interface*
-
-![Register Page](./screenshots/register.png)
-*Registration Page with retro-styled interface*
-
-![Dashboard](./screenshots/dashboard.png)
-*Dashboard showing welcome screen, character stats and active goals*
-
-![Goal Creation](./screenshots/goal-creation.png)
-*Goal Creation Form with attribute rewards*
-
 ## Features
 
 - **Gamified Task Management**: Transform your daily tasks into an RPG-style adventure
@@ -36,27 +22,88 @@ HypeHub is a gamified productivity application built with Next.js that turns you
     - Ideal for breaking bad habits, meditation, and challenging personal goals
     - Example: "Meditate for 15 minutes" (+2 WIL)
 - **Multiple Goal Types**:
-  - **Daily**: Quick quests that reset daily (1-2 attribute points)
+  - **Daily**: Quick quests that reset daily (1-3 attribute points)
     - Perfect for building habits and maintaining daily routines
-  - **Missions**: Medium-term challenges (1-4 weeks, 2-3 attribute points)
+  - **Missions**: Medium-term challenges (1-4 weeks, 3-5 attribute points)
     - Ideal for projects and medium-scope achievements
-  - **Quests**: Epic long-term adventures (1-12 months, 3-5 attribute points)
+  - **Quests**: Epic long-term adventures (1-12 months, 5-10 attribute points)
     - Perfect for life-changing goals and major achievements
 - **Attribute System**: Each completed goal awards attribute points based on type and difficulty
 - **Real-time Features**: 
+  - Server status indicator
   - Live chat with other users
-  - Real-time notifications
   - User presence tracking
+  - Real-time notifications
   - Goal completion celebrations
+
+## Screenshots
+
+![Login Page](./screenshots/login.png)
+*Login Page with retro-styled interface*
+
+![Register Page](./screenshots/register.png)
+*Registration Page with retro-styled interface*
+
+![Dashboard](./screenshots/dashboard.png)
+*Dashboard showing welcome screen, character stats and active goals*
+
+![Goal Creation](./screenshots/goal-creation.png)
+*Goal Creation Form with attribute rewards*
+
+## Tech Stack
+
+- **Runtime**: Node.js 20.x
+- **Package Manager**: pnpm 10.x
+- **Framework**: Next.js 15.x with TypeScript
+- **Styling**: Tailwind CSS, NES.css for retro styling
+- **Database**: Supabase with PostgreSQL
+- **Authentication**: Supabase Auth
+- **ORM**: Drizzle
+- **Real-time**: WebSocket server with ws package
+- **Infrastructure**: 
+  - Terraform for cloud infrastructure
+  - Ansible for configuration management
+  - PM2 for process management
 
 ## Project Structure
 
 This is a monorepo containing:
 - `client/`: Next.js frontend application
 - `server/`: WebSocket server for real-time features
+- `packages/types`: Shared TypeScript types
+- `infrastructure/`: Infrastructure as Code (IaC)
+  - `terraform/`: GCP infrastructure configuration
+  - `ansible/`: Deployment and configuration management
+
+## Infrastructure
+
+HypeHub uses Infrastructure as Code (IaC) to automate deployment and management of the WebSocket server.
+
+### Cloud Infrastructure (Terraform)
+- GCP e2-micro instance for WebSocket server
+- Configured firewall rules for:
+  - SSH (22)
+  - HTTP (80)
+  - HTTPS (443)
+  - WebSocket (8080)
+- Automated VM provisioning and configuration
+
+### Deployment (Ansible)
+- Automated server setup and configuration
+- Node.js and pnpm installation
+- PM2 process management
+- GitHub deploy key configuration
+- Application deployment and updates
 
 ## Quick Start
 
+### Prerequisites
+- Node.js 20.x
+- pnpm 10.x
+- Google Cloud Platform account (for production)
+- Supabase account and project
+
+### Local Development
 1. Clone the repository
 2. Install dependencies:
 ```bash
@@ -86,67 +133,100 @@ pnpm --filter client dev
 ```
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Tech Stack
+### Production Deployment
 
-- **Runtime**: Node.js 20.x
-- **Package Manager**: pnpm 10.x
-- **Framework**: Next.js 15.1.7 with TypeScript
-- **Styling**: Tailwind CSS, NES.css for retro styling
-- **Database**: Supabase with PostgreSQL
-- **Authentication**: Supabase Auth
-- **ORM**: Drizzle
-- **Real-time**: WebSocket server with ws package
+1. **Infrastructure Setup**
+```bash
+# Initialize and apply Terraform configuration
+cd infrastructure/terraform
+terraform init
+terraform apply
+
+# Deploy application with Ansible
+cd ../ansible
+ansible-playbook -i inventory/hosts.yml playbook.yml
+```
+
+2. **Application Updates**
+```bash
+# Update application
+cd infrastructure/ansible
+./update.sh
+```
 
 ## Development
 
 ### Available Commands
 ```bash
-# Start both client and server
-pnpm dev
+# Local Development
+pnpm dev              # Start both client and server
 
-# Client commands (run from client directory)
+# Client commands
 cd client
-pnpm dev          # Start Next.js development server
-pnpm build        # Build client for production
-pnpm start        # Start production client
-pnpm lint         # Run linting
-pnpm typecheck    # Run type checking
-pnpm db:gen       # Generate database types
-pnpm db:push      # Push database changes
-pnpm db:studio    # Open database studio
+pnpm dev              # Start Next.js development server
+pnpm build            # Build client for production
+pnpm start            # Start production client
+pnpm lint             # Run linting
+pnpm typecheck        # Run type checking
+pnpm db:gen           # Generate database types
+pnpm db:push          # Push database changes
+pnpm db:studio        # Open database studio
 
-# Server commands (run from server directory)
+# Server commands
 cd server
-pnpm dev          # Start WebSocket development server
-pnpm build        # Build server for production
-pnpm start        # Start production server
+pnpm dev              # Start WebSocket development server
+pnpm build            # Build server for production
+pnpm start            # Start production server
+
+# Infrastructure commands
+cd infrastructure/terraform
+terraform init        # Initialize Terraform
+terraform plan        # Preview changes
+terraform apply       # Apply infrastructure changes
+
+cd infrastructure/ansible
+./update.sh           # Update application
 ```
 
 ## Roadmap
 
+### Infrastructure Enhancements
+- SSL/TLS integration
+- Automated backups
+- Monitoring and alerting
+- High availability setup
+
 ### Dashboard Enhancements
-- Enhanced progress bars for task completion and attribute growth
-- Flexible goal filtering system (daily, 3-day, weekly, monthly views)
-- Expanded dashboard to include:
-  - Current weather information
-  - Local news feed
-  - Goals due within next 3 days
-- Additional animations and visual feedback
+- Enhanced progress visualization and attribute tracking
+- Flexible goal filtering (daily, weekly, monthly views)
+- Smart dashboard widgets:
+  - Weather integration
+  - News feed
+  - Upcoming goals preview
+- Improved animations and visual feedback
 
 ### Social Features
-- Real-time chat with other users via WebSocket integration
-- Notifications system for goal updates and social interactions
-- Settings customization page
+- Real-time chat system
+- Social interactions and notifications
+- User profiles and achievements
+- Community challenges and events
 
 ### Smart Goal Features
-- Intelligent goal creation with helpful prompts
-- Suggested timeframes for different goal types:
+- AI-powered goal suggestions
+- Dynamic timeframe recommendations:
   - Missions: 1-4 weeks
   - Quests: 1-12 months
-- Weather integration for outdoor goals:
-  - Location-based weather checking
-  - Smart suggestions for alternative indoor activities
-  - Weather alerts and confirmations
+- Weather-aware outdoor goals:
+  - Location-based weather checks
+  - Indoor alternatives suggestions
+  - Weather alerts and planning
+
+### Application Features
+- Enhanced progress bars
+- Settings customization
+- Notifications system
+- Mobile responsiveness
+- Offline support
 
 ## Contributing
 
@@ -154,6 +234,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT License - Copyright (c) 2024 HypeHub
+MIT License - Copyright (c) 2025 HypeHub
 
 See [MIT License](https://opensource.org/licenses/MIT) for details.

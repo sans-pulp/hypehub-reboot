@@ -10,11 +10,8 @@ on:
     branches: [main]
 
 jobs:
-  client:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: client
 
     steps:
       - name: Checkout repository
@@ -30,19 +27,29 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: 'client/pnpm-lock.yaml'
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Lint
-        run: pnpm run lint 
+      - name: Build types package
+        run: pnpm --filter @hypehub/types build
 
-      - name: Typecheck
-        run: pnpm run typecheck
+      - name: Lint client
+        run: pnpm --filter @hypehub/client lint
 
-      - name: Build
-        run: pnpm run build
+      - name: Typecheck client
+        run: pnpm --filter @hypehub/client typecheck
+
+      - name: Build client
+        run: pnpm --filter @hypehub/client build
+
+  verify:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify CI
+        run: echo "All checks passed"
 
 # TODO: Add server job when WebSocket server is implemented
 # - Build and test server

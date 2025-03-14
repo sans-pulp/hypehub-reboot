@@ -8,12 +8,21 @@ node_modules/
 # Build
 client/.next/
 client/out/
+dist/
+**/dist/
 
 # Infrastructure
-infrastructure/.terraform/
 *.tfstate
 *.tfstate.*
+*.terraform/
 terraform.tfvars
+*.tfvars
+
+# Ansible
+infrastructure/ansible/vars.yml
+infrastructure/ansible/*.retry
+infrastructure/ansible/inventory/*.yml
+!infrastructure/ansible/inventory/hosts.example.yml
 
 # IDE
 .vscode/

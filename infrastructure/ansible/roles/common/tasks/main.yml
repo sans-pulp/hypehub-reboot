@@ -1,0 +1,12 @@
+---
+- name: Install system packages
+  apt:
+    name:
+      - curl
+      - git
+      - build-essential
+    state: present
+
+- name: Update apt cache
+  apt:
+    update_cache: yes

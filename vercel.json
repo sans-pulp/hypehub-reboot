@@ -1,0 +1,10 @@
+{
+  "buildCommand": "pnpm --filter types build && pnpm --filter client build",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "github": {
+    "silent": true,
+    "enabled": true,
+    "requiredStatusChecks": ["verify"]
+  }
+} 
