@@ -10,3 +10,17 @@
     - nodejs # Node.js + pnpm setup
     - nginx # Nginx + SSL setup
     - app # Websocket server setup
+
+  post_tasks:
+    - name: Show setup summary
+      debug:
+        msg: |
+          Setup Complete:
+          - System updated and configured
+          - Node.js and pnpm installed
+          - Nginx installed and configured with SSL
+          - SSL certificate obtained for {{ websocket_domain }}
+          - WebSocket server deployed and running
+          
+          You can now access your WebSocket server at:
+          wss://{{ websocket_domain }}

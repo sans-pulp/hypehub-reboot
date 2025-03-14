@@ -10,3 +10,6 @@ github_branch: main
 
 # App settings
 allowed_origins: "*"
+
+# SSL settings
+# certbot_email should be provided via environment variable CERTBOT_EMAIL when running the playbook
