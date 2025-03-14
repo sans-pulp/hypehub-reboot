@@ -7,8 +7,8 @@ NC='\033[0m' # No Color
 
 echo -e "${YELLOW}Starting HypeHub update process...${NC}"
 
-# Run the update playbook
-ansible-playbook -i inventory/hosts.yml update.yml
+# Run the update playbook with vars file
+ansible-playbook -i inventory/hosts.yml update.yml --extra-vars "@vars.yml"
 
 # Check the exit status
 if [ $? -eq 0 ]; then

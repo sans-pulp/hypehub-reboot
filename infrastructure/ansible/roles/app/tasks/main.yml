@@ -23,7 +23,7 @@
     owner: hypehub
     group: hypehub
     mode: '0600'
-  no_log: true  # Don't show key in logs
+  no_log: true
 
 - name: Configure SSH for GitHub
   template:
@@ -33,11 +33,13 @@
     group: hypehub
     mode: '0600'
 
-- name: Debug SSH key (safely)
+- name: Get SSH key fingerprint
   command: ssh-keygen -l -f /home/hypehub/.ssh/github_deploy_key
   register: key_fingerprint
   ignore_errors: yes
   changed_when: false
+
+- name: Display SSH key fingerprint
   debug:
     var: key_fingerprint.stdout
 
