@@ -1,0 +1,7 @@
+---
+# GitHub deploy key for cloning the repository
+# Generate a new deploy key and add it to your GitHub repository
+github_deploy_key: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    your_deploy_key_here
+    -----END OPENSSH PRIVATE KEY----- 

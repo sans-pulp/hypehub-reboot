@@ -18,6 +18,12 @@ dist/
 terraform.tfvars
 *.tfvars
 
+# Ansible
+infrastructure/ansible/vars.yml
+infrastructure/ansible/*.retry
+infrastructure/ansible/inventory/*.yml
+!infrastructure/ansible/inventory/hosts.example.yml
+
 # IDE
 .vscode/
 .idea/
