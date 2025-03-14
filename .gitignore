@@ -8,12 +8,15 @@ node_modules/
 # Build
 client/.next/
 client/out/
+dist/
+**/dist/
 
 # Infrastructure
-infrastructure/.terraform/
 *.tfstate
 *.tfstate.*
+*.terraform/
 terraform.tfvars
+*.tfvars
 
 # IDE
 .vscode/

@@ -1,0 +1,30 @@
+---
+- name: Install Nginx and Certbot
+  apt:
+    name:
+      - nginx
+      - certbot
+      - python3-certbot-nginx
+    state: present
+
+- name: Configure Nginx with template
+  template:
+    src: hypehub.conf.j2
+    dest: /etc/nginx/sites-available/hypehub
+    mode: '0644'
+  notify: reload nginx
+
+- name: Enable site
+  file:
+    src: /etc/nginx/sites-available/hypehub
+    dest: /etc/nginx/sites-enabled/hypehub
+    state: link
+  notify: reload nginx
+
+- name: Remove default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+  
+  

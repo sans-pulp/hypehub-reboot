@@ -1,0 +1,12 @@
+--- 
+- name: Configure HypeHub WebSocket Server
+  hosts: websocket_server
+  become: yes  # Run as root
+  vars_files:
+    - group_vars/all.yml # Global variables
+  
+  roles:
+    - common # Common tasks (ex: system updates)
+    - nodejs # Node.js + pnpm setup
+    - nginx # Nginx + SSL setup
+    - app # Websocket server setup

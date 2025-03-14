@@ -1,0 +1,84 @@
+---
+- name: Ensure app directory exists
+  file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: hypehub
+    group: hypehub
+    mode: '0755'
+
+- name: Ensure .ssh directory exists
+  file:
+    path: /home/hypehub/.ssh
+    state: directory
+    owner: hypehub
+    group: hypehub
+    mode: '0700'
+
+- name: Setup GitHub deploy key
+  copy:
+    content: |
+      {{ github_deploy_key }}
+    dest: /home/hypehub/.ssh/github_deploy_key
+    owner: hypehub
+    group: hypehub
+    mode: '0600'
+  no_log: true  # Don't show key in logs
+
+- name: Configure SSH for GitHub
+  template:
+    src: ssh_config.j2
+    dest: /home/hypehub/.ssh/config
+    owner: hypehub
+    group: hypehub
+    mode: '0600'
+
+- name: Debug SSH key (safely)
+  command: ssh-keygen -l -f /home/hypehub/.ssh/github_deploy_key
+  register: key_fingerprint
+  ignore_errors: yes
+  changed_when: false
+  debug:
+    var: key_fingerprint.stdout
+
+- name: Clone/update repository
+  git:
+    repo: "git@github.com:{{ github_repo }}.git"
+    dest: "{{ app_dir }}"
+    key_file: /home/hypehub/.ssh/github_deploy_key
+    accept_hostkey: yes
+  become_user: hypehub
+
+- name: Build types package
+  command: "{{ item }}"
+  args:
+    chdir: "{{ app_dir }}/packages/types"
+  with_items:
+    - pnpm install
+    - pnpm run build
+  become_user: hypehub
+
+- name: Install server dependencies
+  command: pnpm install
+  args:
+    chdir: "{{ app_dir }}/server"
+  become_user: hypehub
+
+- name: Build server
+  command: pnpm run build
+  args:
+    chdir: "{{ app_dir }}/server"
+  become_user: hypehub
+
+- name: Start/restart application
+  shell: |
+    if pm2 list | grep -q "hypehub"; then
+      pm2 delete hypehub
+    fi
+    pm2 start dist/index.js --name "hypehub"
+  args:
+    chdir: "{{ app_dir }}/server"
+  environment:
+    ALLOWED_ORIGINS: "{{ allowed_origins }}"
+    PORT: "{{ websocket_port }}"
+  become_user: hypehub

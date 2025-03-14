@@ -1,0 +1,34 @@
+---
+- name: Add NodeSource repository
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
+
+- name: Install Node.js
+  apt:
+    name: nodejs
+    state: present
+
+- name: Wipe previous pnpm installation
+  npm:
+    name: pnpm
+    state: absent
+    global: yes
+
+- name: Remove pnpm binary if exists
+  file:
+    path: /usr/bin/pnpm
+    state: absent
+
+- name: Install pnpm globally
+  npm:
+    name: pnpm
+    global: yes
+    state: present
+    force: yes
+
+- name: Install PM2 globally
+  npm:
+    name: pm2
+    global: yes

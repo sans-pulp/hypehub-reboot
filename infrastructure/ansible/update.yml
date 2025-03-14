@@ -1,0 +1,74 @@
+---
+- name: Update HypeHub Application
+  hosts: websocket_server
+  become: yes
+  become_user: hypehub
+  vars_files:
+    - group_vars/all.yml
+
+  tasks:
+    - name: Check if application is running
+      shell: pm2 list | grep hypehub
+      register: app_status
+      ignore_errors: yes
+
+    - name: Pull latest changes
+      git:
+        repo: "git@github.com:{{ github_repo }}.git"
+        dest: "{{ app_dir }}"
+        key_file: /home/hypehub/.ssh/github_deploy_key
+        accept_hostkey: yes
+        force: yes
+      register: git_status
+
+    - name: Build types package (only if repo changed)
+      command: "{{ item }}"
+      args:
+        chdir: "{{ app_dir }}/packages/types"
+      with_items:
+        - pnpm install
+        - pnpm run build
+      when: git_status.changed
+
+    - name: Install server dependencies (only if repo changed)
+      command: pnpm install
+      args:
+        chdir: "{{ app_dir }}/server"
+      when: git_status.changed
+
+    - name: Build server (only if repo changed)
+      command: pnpm run build
+      args:
+        chdir: "{{ app_dir }}/server"
+      when: git_status.changed
+
+    - name: Restart application (only if changes were made)
+      shell: |
+        cd {{ app_dir }}/server && \
+        if pm2 list | grep -q "hypehub"; then
+          pm2 restart hypehub
+        else
+          pm2 start dist/index.js --name "hypehub"
+        fi
+      environment:
+        ALLOWED_ORIGINS: "{{ allowed_origins }}"
+        PORT: "{{ websocket_port }}"
+      when: git_status.changed
+
+    - name: Check application status
+      shell: pm2 status hypehub
+      register: final_status
+
+    - name: Show application status
+      debug:
+        var: final_status.stdout_lines
+
+    - name: Show update summary
+      debug:
+        msg: |
+          Update Summary:
+          - Git changes: {{ git_status.changed }}
+          - Application status: {{ 'Running' if final_status.rc == 0 else 'Not running' }}
+          {% if git_status.changed %}
+          - Changes pulled from branch: {{ git_status.after }}
+          {% endif %} 
