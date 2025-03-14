@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd packages/types && pnpm build && cd ../../client && pnpm build",
+  "buildCommand": "pnpm --filter types build && pnpm --filter client build",
   "installCommand": "pnpm install",
   "framework": "nextjs",
   "github": {

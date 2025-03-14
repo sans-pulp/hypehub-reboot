@@ -10,11 +10,8 @@ on:
     branches: [main]
 
 jobs:
-  types:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/types
 
     steps:
       - name: Checkout repository
@@ -36,45 +33,19 @@ jobs:
         run: pnpm install
 
       - name: Build types package
-        run: pnpm run build
+        run: pnpm --filter @hypehub/types build
 
-  client:
-    needs: types
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: client
+      - name: Lint client
+        run: pnpm --filter @hypehub/client lint
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Install PNPM
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-          
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-          cache-dependency-path: '**/pnpm-lock.yaml'
+      - name: Typecheck client
+        run: pnpm --filter @hypehub/client typecheck
 
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Lint
-        run: pnpm run lint 
-
-      - name: Typecheck
-        run: pnpm run typecheck
-
-      - name: Build
-        run: pnpm run build
+      - name: Build client
+        run: pnpm --filter @hypehub/client build
 
   verify:
-    needs: [types, client]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Verify CI
