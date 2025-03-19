@@ -137,3 +137,66 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Loader Cube */
+
+@keyframes hue-rotate {
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.loader-container {
+  --w: 35px;
+  --g: 5px;
+  --t: calc(var(--w) + var(--g));
+  width: var(--w);
+  aspect-ratio: 1;
+  perspective: 120px;
+  transform-style: preserve-3d;
+}
+
+.loader-cube {
+  --fz: 0;
+  --rx: 0;
+  --fx: 0;
+  --ry: 0;
+  --fy: 0;
+  position: absolute;
+  background: #fffc;
+  border: 2px solid black;
+  width: var(--w);
+  aspect-ratio: 1;
+  bottom: calc(var(--w) * -0.5);
+  right: calc(var(--w) * -0.5);
+  animation:
+    rotate 10s linear infinite,
+    hue-rotate 10s linear infinite;
+  transition: 5s;
+  --a: translateZ(calc(0.5 * var(--w)))
+    translateX(calc(var(--x) * var(--t) - 0.5 * var(--fy) * var(--w)))
+    translateY(calc(var(--y) * var(--t) - 0.5 * var(--fx) * var(--w)))
+    translateZ(
+      calc(
+        var(--z) * var(--t) - 0.5 * var(--ry) * var(--w) - 0.5 * var(--rx) *
+          var(--w) - var(--fz) * var(--w)
+      )
+    )
+    rotateX(calc(90deg * var(--rx))) rotateY(calc(90deg * var(--ry)));
+  --p: translateX(calc(-0.5 * var(--w))) translateY(calc(-0.5 * var(--w)))
+    translateZ(calc(-0.5 * var(--w)));
+}
+
+.loader-cube:hover {
+  background: #f00e;
+  transition: 0s;
+}
+
+@keyframes rotate {
+  0% {
+    transform: var(--p) rotateZ(0deg) rotateY(0deg) rotateX(0deg) var(--a);
+  }
+  to {
+    transform: var(--p) rotateZ(360deg) rotateY(720deg) rotateX(360deg) var(--a);
+  }
+}

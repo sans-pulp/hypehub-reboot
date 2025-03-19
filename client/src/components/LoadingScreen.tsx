@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Progress } from '@/components/ui/progress'
+import { LoaderCube } from './LoaderCube'
 
 export const LoadingScreen = () => {
     const [progress, setProgress] = useState(0)
@@ -45,7 +46,10 @@ export const LoadingScreen = () => {
     }, [loadingText.length])
 
     return (
-        <div className="flex justify-center items-center min-h-screen p-4">
+        <div className="flex flex-col justify-center items-center min-h-screen p-4">
+            <div className="flex items-center justify-center pb-32">
+                <LoaderCube />
+            </div>
             <div className="nes-container with-title h-120 w-9/12 !border-2 !border-[#209cee]">
                 <h1 className="title">{loadingText[messageIndex]}</h1>
                 {progress < 99 && <Progress className="[&>div]:bg-[#209cee] animate-pulse" value={progress}></Progress>}
@@ -54,3 +58,4 @@ export const LoadingScreen = () => {
         </div>
     )
 }
+
