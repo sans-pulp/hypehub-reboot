@@ -11,18 +11,20 @@ export interface WeatherData {
         is_day: 1|0;
     },
     daily: {
-        weathercode: number;
-        temperature_2m_max: number;
-        temperature_2m_min: number;
-        precipitation_sum: number;
-        precipitation_probability_max: number;
-        windspeed_10m_max: number;
+        time: string[];
+        weathercode: number[];
+        temperature_2m_max: number[];
+        temperature_2m_min: number[];
+        precipitation_sum: number[];
+        precipitation_probability_max: number[];
+        windspeed_10m_max: number[];
     },
     hourly: {
-        temperature_2m: number;
-        precipitation_probability: number;
-        weathercode: number;
-        is_day: 1|0;
+        time: string[];
+        temperature_2m: number[];
+        precipitation_probability: number[];
+        weathercode: number[];
+        is_day: (1|0)[];
     },
 }
 
@@ -57,6 +59,12 @@ export const useWeather = () => {
                     'precipitation_probability_max',
                     'windspeed_10m_max'
                 ].join(','),
+                hourly: [
+                    'temperature_2m',
+                    'precipitation_probability',
+                    'weathercode',
+                    'is_day'
+                ].join(','),
                 forecast_days: '3'
             });
 
@@ -66,7 +74,12 @@ export const useWeather = () => {
                     throw new Error('Weather API request failed');
                 }
                 const data = await response.json();
-                setWeatherData(data as WeatherData);
+                setWeatherData({
+                    current: data.current,
+                    daily: data.daily,
+                    hourly: data.hourly
+                } as WeatherData);
+                setWeatherError(null);
             } catch (error) {
                 console.error('Error fetching weather:', error);
                 setWeatherError(error as Error);

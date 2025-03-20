@@ -63,20 +63,6 @@ export const WeatherStatus = () => {
     locationError,
     requestLocation 
   } = useWeatherContext();
-  const [checkingPermission, setCheckingPermission] = useState(true);
-
-  useEffect(() => {
-    // Check if permissions are supported
-    if (!navigator.permissions) {
-      setCheckingPermission(false);
-      return;
-    }
-
-    // Query permissions
-    navigator.permissions.query({ name: 'geolocation' })
-      .then(() => setCheckingPermission(false))
-      .catch(() => setCheckingPermission(false));
-  }, []);
 
   const handleWeatherRequest = useCallback(() => {
     requestLocation();
@@ -90,8 +76,8 @@ export const WeatherStatus = () => {
     return "text-orange-400";
   };
 
-  // Show loading state while checking permissions or loading weather data
-  if (checkingPermission || loading) {
+  // Show loading state while loading weather data
+  if (loading) {
     return (
       <span className="flex items-center gap-1 text-gray-400">
         <RotateCw className="w-4 h-4 animate-spin" />
