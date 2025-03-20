@@ -36,12 +36,8 @@ export const Header = ({ isConnected, profile, connectedUsers }: HeaderProps) =>
         {/* Right section - Weather and Profile */}
         <div className="flex items-center gap-6">
           <WeatherStatus />
-          
           {profile && (
             <div className="flex items-center gap-3">
-              <span className="text-sm">
-                {profile.firstName} {profile.lastName}
-              </span>
               <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center">
                 <span className="text-white font-bold">
                   {profile.firstName[0]}

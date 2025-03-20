@@ -5,6 +5,8 @@ import {
   RotateCw, 
   MapPin,
   Sun,
+  Sunrise,
+  Sunset,
   Moon,
   Cloud,
   CloudFog,
@@ -54,6 +56,17 @@ const getWeatherIcon = (code: number, isDay: 0 | 1) => {
   
   return { icon: Cloudy, description: "Cloudy conditions" };
 };
+
+const getSunriseSunset = (sunrise: string[], sunset: string[]) => {
+    const now = new Date();
+    const sunriseDate = sunrise.find(date => new Date(date).getDay() === now.getDay()) ?? sunrise[0];
+    const sunsetDate = sunset.find(date => new Date(date).getDay() === now.getDay()) ?? sunset[0];
+    
+    return {
+        sunrise: new Date(sunriseDate).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric' }),
+        sunset: new Date(sunsetDate).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric' })
+    }
+}
 
 export const WeatherStatus = () => {
   const { 
@@ -119,9 +132,35 @@ export const WeatherStatus = () => {
     weatherData.current.is_day
   );
 
+  const { sunrise, sunset } = getSunriseSunset(weatherData.daily.sunrise, weatherData.daily.sunset);
+  
   return (
     <TooltipProvider>
       <div className="flex items-center gap-3">
+        <div className="sunrise-sunset-container flex gap-2">
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1 cursor-help">
+                    <Sunrise className="w-4 h-4" />
+                    <span className="text-xs">{sunrise}</span>
+                </div>
+            </TooltipTrigger>
+            <TooltipContent className="bg-gray-900 text-white">
+                <p className="text-xs">Sunrise</p>
+            </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <div className="flex items-center gap-1 cursor-help">
+                    <Sunset className="w-4 h-4" />
+                    <span className="text-xs">{sunset}</span>
+                </div>
+            </TooltipTrigger>
+            <TooltipContent className="bg-gray-900 text-white">
+                <p className="text-xs">Sunset</p>
+            </TooltipContent>
+            </Tooltip>
+        </div>
         <Tooltip>
           <TooltipTrigger asChild>
             <div className="flex items-center gap-1 cursor-help">
@@ -137,7 +176,7 @@ export const WeatherStatus = () => {
           <TooltipTrigger asChild>
             <div className="flex items-center gap-1 cursor-help">
               <Thermometer className={`w-4 h-4 ${getTemperatureColor(weatherData.current.temperature_2m)}`} />
-              <span className={`text-md font-medium ${getTemperatureColor(weatherData.current.temperature_2m)}`}>
+              <span className={`text-xs font-medium ${getTemperatureColor(weatherData.current.temperature_2m)}`}>   
                 {weatherData.current.temperature_2m}°
               </span>
             </div>
@@ -151,7 +190,7 @@ export const WeatherStatus = () => {
           <TooltipTrigger asChild>
             <div className="flex items-center gap-1 cursor-help">
               <ThermometerSun className={`w-4 h-4 ${getTemperatureColor(weatherData.current.apparent_temperature)}`} />
-              <span className={`text-sm ${getTemperatureColor(weatherData.current.apparent_temperature)}`}>
+              <span className={`text-xs ${getTemperatureColor(weatherData.current.apparent_temperature)}`}>
                 {weatherData.current.apparent_temperature}°
               </span>
             </div>
@@ -163,4 +202,4 @@ export const WeatherStatus = () => {
       </div>
     </TooltipProvider>
   );
-}; 
+};

@@ -18,6 +18,8 @@ export interface WeatherData {
         precipitation_sum: number[];
         precipitation_probability_max: number[];
         windspeed_10m_max: number[];
+        sunrise: string[];
+        sunset: string[];
     },
     hourly: {
         time: string[];
@@ -57,7 +59,9 @@ export const useWeather = () => {
                     'temperature_2m_min',
                     'precipitation_sum',
                     'precipitation_probability_max',
-                    'windspeed_10m_max'
+                    'windspeed_10m_max',
+                    'sunrise',
+                    'sunset'
                 ].join(','),
                 hourly: [
                     'temperature_2m',
