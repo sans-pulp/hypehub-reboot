@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Press_Start_2P } from "next/font/google";
 import "./globals.css";
-import { WebSocketProvider } from "@/WebSocketContext";
+import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { Toaster } from "@/components/ui/sonner";
 
 const pressStart2P = Press_Start_2P({

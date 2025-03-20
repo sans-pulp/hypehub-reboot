@@ -28,6 +28,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { ATTRIBUTE_COLORS, MIN_ATTRIBUTE_POINTS, MAX_ATTRIBUTE_POINTS } from "@/components/ui/constants";
 
 // Constants for the form
 const GOAL_TYPES = ["Daily", "Mission", "Quest"] as const;
@@ -41,9 +42,6 @@ const ATTRIBUTE_TYPES = [
   "Willpower",
 ] as const;
 type AttributeName = (typeof ATTRIBUTE_TYPES)[number];
-
-const MIN_ATTRIBUTE_POINTS = 1;
-const MAX_ATTRIBUTE_POINTS = 5;
 
 // Templates for quick goal creation
 const GOAL_TEMPLATES = [
@@ -242,15 +240,15 @@ export const EnhancedGoalCreation = ({
   const getAttributeColor = (attribute: string) => {
     switch (attribute.toLowerCase()) {
       case "strength":
-        return "bg-red-500";
+        return ATTRIBUTE_COLORS.strength;
       case "vitality":
-        return "bg-green-500";
+        return ATTRIBUTE_COLORS.vitality;
       case "knowledge":
-        return "bg-blue-500";
+        return ATTRIBUTE_COLORS.knowledge;
       case "social":
-        return "bg-yellow-500";
+        return ATTRIBUTE_COLORS.social;
       case "willpower":
-        return "bg-purple-500";
+        return ATTRIBUTE_COLORS.willpower;
       default:
         return "bg-gray-500";
     }

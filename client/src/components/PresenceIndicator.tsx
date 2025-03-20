@@ -2,7 +2,7 @@
 'use client'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
-import { useWebSocketContext } from '@/WebSocketContext'
+import { useWebSocketContext } from '@/contexts/WebSocketContext'
 import { useEffect, useState } from 'react'
 import { ConnectedUsersCountPayload } from '@hypehub/types'
 

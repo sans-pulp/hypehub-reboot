@@ -6,7 +6,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-  import { GOAL_TYPES } from "@/components/goal-creation/constants"
+  import { GOAL_TYPES } from "@/components/ui/constants"
 import { SelectGoalTypeProps } from "@/components/goal-creation/types"
 
 export  const SelectGoalType = ({ setGoalType }: SelectGoalTypeProps) => {

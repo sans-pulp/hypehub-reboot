@@ -1,7 +1,7 @@
 import { AttributeType } from "@/db/schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ATTRIBUTE_COLORS, MIN_ATTRIBUTE_POINTS, MAX_ATTRIBUTE_POINTS } from "@/components/goal-creation/constants";
+import { ATTRIBUTE_COLORS, MIN_ATTRIBUTE_POINTS, MAX_ATTRIBUTE_POINTS } from "@/components/ui/constants";
 
 interface AttributeRewardsProps {
   attributes: AttributeType[];

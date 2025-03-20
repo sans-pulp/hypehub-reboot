@@ -1,4 +1,4 @@
-import {GOAL_TYPES} from "@/components/goal-creation/constants";
+import {GOAL_TYPES} from "@/components/ui/constants";
 import { AttributeType } from "@/db/schema";
 export type GoalType = typeof GOAL_TYPES[number]
 
