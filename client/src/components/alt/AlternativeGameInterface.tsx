@@ -3,13 +3,15 @@
 import { useState, useEffect } from "react";
 import { getCurrentUserData } from "@/utils/auth";
 import type { Profile, Attribute, Goal } from "@/db/schema";
-import { useWebSocketContext } from "@/WebSocketContext";
+import { useWebSocketContext } from "@/contexts/WebSocketContext";
 import { LoadingScreen } from "../LoadingScreen";
 import { Header } from "./layout/Header";
 import { Navigation } from "./layout/Navigation";
 import { Dashboard } from "./views/Dashboard";
 import { Goals } from "./views/Goals";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { useWeatherContext, WeatherProvider } from "@/contexts/WeatherContext";
+import { ConnectedUsersCountPayload } from "@hypehub/types";
 
 type ViewType = "dashboard" | "goals" | "social" | "achievements";
 
@@ -29,9 +31,10 @@ export const AlternativeGameInterface = () => {
     activeView: "dashboard",
   });
   const [loading, setLoading] = useState(true);
-
+  
   // WebSocket connection
   const { isConnected, send, latestEvent } = useWebSocketContext();
+  const [connectedUsers, setConnectedUsers] = useState<number>(0);
 
   // Initial data fetch
   const fetchUserData = async () => {
@@ -45,8 +48,17 @@ export const AlternativeGameInterface = () => {
       }));
     } catch (error) {
       console.error("Error fetching user data:", error);
-    } finally {
-      setLoading(false);
+    } finally { 
+      const minLoadingTime = 2500;
+      const loadingStartTime = Date.now();
+      const timeElapsed = Date.now() - loadingStartTime;
+      if (timeElapsed < minLoadingTime) {
+        setTimeout(() => {
+          setLoading(false);
+        }, minLoadingTime - timeElapsed);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
@@ -70,6 +82,11 @@ export const AlternativeGameInterface = () => {
       case "LEVEL_UP":
         // Refresh attributes when leveling up
         fetchUserData();
+        break;
+      case "CONNECTED_USERS_COUNT":
+        // Handle the connected users count
+        const payload = latestEvent.payload as ConnectedUsersCountPayload
+        setConnectedUsers(payload.count)
         break;
       default:
         console.log("Unhandled event:", latestEvent);
@@ -105,9 +122,25 @@ export const AlternativeGameInterface = () => {
     return <LoadingScreen />;
   }
 
-  return (
-    <div className="alternative-game-interface min-h-screen bg-gray-900">
-      <Header isConnected={isConnected} profile={gameState.profile} />
+  const GameContent = () => {
+    const { 
+        weatherData, 
+        loading: weatherLoading, 
+        weatherError,
+
+    } = useWeatherContext();
+
+
+
+    if (weatherError) {
+      console.error("Weather error:", weatherError);
+      return <div>Error loading weather data</div>;
+    }
+
+
+    return (
+      <div className="alternative-game-interface min-h-screen bg-gray-900">
+      <Header isConnected={isConnected} profile={gameState.profile} connectedUsers={connectedUsers} />
       <Navigation
         activeView={gameState.activeView}
         onViewChange={handleViewChange}
@@ -157,5 +190,12 @@ export const AlternativeGameInterface = () => {
         </Tabs>
       </main>
     </div>
+    )
+  }
+
+  return (
+    <WeatherProvider >
+      <GameContent />
+    </WeatherProvider>
   );
 };

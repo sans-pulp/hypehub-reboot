@@ -7,7 +7,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { GoalListContainer } from "@/components/GoalList";
 import { GoalCreationForm } from "@/components/goal-creation/GoalCreationForm";
 import { PresenceIndicator } from "./PresenceIndicator";
-import { useWebSocketContext } from "@/WebSocketContext";
+import { useWebSocketContext } from "@/contexts/WebSocketContext";
 import { toast } from "sonner";
 import { HypeHubEvent, GoalCompletedPayload } from "@hypehub/types";
 import { LogoutButton } from "@/components/LogoutButton";
