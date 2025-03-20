@@ -1,18 +1,26 @@
 'use client'
-import { createContext, useContext } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { useWebSocket } from "../hooks/useWebsocket";
 
 const WebSocketContext = createContext<ReturnType<typeof useWebSocket> | null>(null);
 const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8080'   
+
 export const WebSocketProvider = ({children} : {children: React.ReactNode}) => {
-    const socket = useWebSocket(WS_URL)
-    console.log("WebSocketProvider mounting...", WS_URL);
+    const socket = useWebSocket(WS_URL);
+    // console.log("WebSocketProvider mounting...", socket);
+    const contextValue = useMemo(() => socket, [
+        socket.isConnected,
+        socket.send,
+        socket.latestEvent,
+        socket
+    ]);
+
     return (
-        <WebSocketContext.Provider value={socket}>
+        <WebSocketContext.Provider value={contextValue}>
             {children}
         </WebSocketContext.Provider>
-    )
-}
+    );
+};
 
 export const useWebSocketContext = () => {
     const context = useContext(WebSocketContext);
@@ -20,4 +28,4 @@ export const useWebSocketContext = () => {
         throw new Error('useWebSocketContext must be used within a WebSocketProvider');
     }
     return context;
-}
+};

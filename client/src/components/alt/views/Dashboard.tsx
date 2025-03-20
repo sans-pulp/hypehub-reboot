@@ -1,13 +1,12 @@
 "use client";
 
-import type { Profile, Attribute } from "@/db/schema";
+import type { Attribute } from "@/db/schema";
 
 interface DashboardProps {
-  profile: Profile;
   attributes: Attribute;
 }
 
-export const Dashboard = ({ profile, attributes }: DashboardProps) => {
+export const Dashboard = ({attributes }: DashboardProps) => {
   const attributesList = [
     { name: "Strength", value: attributes.strength, icon: "💪" },
     { name: "Vitality", value: attributes.vitality, icon: "❤️" },

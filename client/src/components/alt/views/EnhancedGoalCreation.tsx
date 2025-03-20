@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createGoal } from "@/app/goals/actions";
 import { AttributeType } from "@/db/schema";
-import { Plus, Sparkles, Calendar, Target } from "lucide-react";
+import { Plus, Sparkles, Target } from "lucide-react";
 import { format, addDays } from "date-fns";
 
 import { Button } from "@/components/ui/button";

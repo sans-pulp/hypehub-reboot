@@ -1,5 +1,4 @@
 import { createClient } from "@/utils/supabase/server";
-import { GameInterface } from "@/components/GameInterface";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { AlternativeGameInterface } from "@/components/alt/AlternativeGameInterface";
 

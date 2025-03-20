@@ -21,7 +21,6 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
   >("all");
   const [loading, setLoading] = useState(false);
   const [completingGoalId, setCompletingGoalId] = useState<number | null>(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   if (!goals) return null;
 
@@ -70,7 +69,6 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
           onGoalCreated={() => {
             // Trigger a refresh via parent component
             onGoalComplete(-1); // Using -1 as a signal to just refresh
-            setRefreshTrigger((prev) => prev + 1);
           }}
         />
       </div>
