@@ -14,32 +14,39 @@ Essential weather features that integrate with existing systems.
   - Current temperature and conditions
   - Basic daily forecast
   - Weather codes for conditions
-- Simple caching mechanism
+- Simple caching mechanism (2-hour refresh cycle)
+- Offline fallback to last known data
 
 ### Initial UI Components
 - Weather display in dashboard
 - Basic weather icons
 - Simple weather alerts
-- Outdoor/indoor goal classification
+- Non-intrusive weather info tooltips for goals
+- Outdoor/indoor goal classification:
+  - Predefined goal categories (indoor/outdoor/flexible)
+  - Basic weather suitability assessment
+  - User-overridable weather warnings
+  - Simple weather-based messaging
 
 ## Phase 2: Enhanced Features
 Building upon core functionality with more complex integrations.
 
 ### Weather-Goal System
-- Weather metadata for goals
-- Basic weather condition checks
-- Simple alternative suggestions
-- Weather-based warnings
+- 3-day forecast preview
+- Weather-based goal scheduling suggestions
+- Weather impact tracking for analytics
+- Weather-based completion rate analysis
 
 ### Dashboard Enhancements
 - 3-day forecast preview
 - Time-of-day UI themes
 - Weather alerts for scheduled goals
-- Basic weather-based recommendations
+- Weather-based recommendations
+- Weather impact visualization
 
 ### Technical Improvements
+- Weather change notification system
 - Improved client-side caching
-- Offline mode handling
 - Mobile-responsive weather displays
 - Performance optimizations
 
@@ -83,6 +90,17 @@ hourly: [
 ]
 ```
 
+### Weather Assessment Rules
+```typescript
+const weatherRules = {
+  outdoor: {
+    unsuitable: ['heavy_rain', 'snow', 'thunderstorm'],
+    caution: ['light_rain', 'cloudy'],
+    suitable: ['clear', 'partly_cloudy']
+  }
+};
+```
+
 ### Security & Privacy
 - Location data handling
 - User consent management
@@ -90,7 +108,7 @@ hourly: [
 - API key security
 
 ### Performance
-- Minimize API calls
+- 2-hour weather refresh cycle
 - Efficient data caching
 - Optimize weather calculations
 - Reduce bundle size
@@ -101,3 +119,6 @@ hourly: [
 - Maintain pixel art aesthetic
 - Focus on user experience
 - Progressive enhancement approach
+- Non-intrusive weather information
+- User freedom to override warnings
+- Simple, clear messaging
