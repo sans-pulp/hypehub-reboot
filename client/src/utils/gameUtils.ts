@@ -2,61 +2,43 @@
  * Game mechanics utility functions for HypeHub
  */
 
+// Base XP constant
+export const BASE_XP = 25;
+
 /**
- * Calculate the XP required for a given level
+ * Calculate the XP needed to achieve a level
+ * For example:
+ * - Level 1: 0 XP (you start here)
+ * - Level 2: 25 XP
+ * - Level 3: 50 XP
+ * - Level 4: 75 XP
  * Uses a tiered system:
- * - Early levels (1-5): Linear, low requirements
- * - Mid levels (6-10): Slightly steeper
- * - Higher levels (11+): Traditional RPG curve
+ * - Early levels (1-5): Linear progression (+25 XP per level)
+ * - Mid levels (6-10): Moderate increase (+30-35 XP per level)
+ * - Higher levels (11+): Steeper curve (+50-75 XP per level)
  */
-export const calculateRequiredXP = (level: number): number => {
-    const baseXP = 25;
+export const getXPForLevel = (level: number): number => {
+    if (level === 1) return 0;
+    
+    const targetLevel = level - 1;
     
     if (level <= 5) {
-        // Early levels: Linear and easy
-        return baseXP * level;
+        return BASE_XP * targetLevel;
     } else if (level <= 10) {
-        // Mid levels: Slightly steeper
-        return baseXP * level * 1.2;
+        return BASE_XP * targetLevel * 1.3;
     } else {
-        // Higher levels: Add a fixed amount per level beyond 10. This creates a steady but manageable increase
-        const extraPerLevel = 50; // Additional XP per level after 10
-        return baseXP * level * 1.2 + (level - 10) * extraPerLevel;
+        const extraPerLevel = 40;
+        return BASE_XP * targetLevel * 1.3 + (targetLevel - 10) * extraPerLevel;
     }
 };
 
 /**
- * Calculate the total XP needed from level 1 to reach a given level
- */
-export const calculateTotalXPForLevel = (level: number): number => {
-    let total = 0;
-    for (let i = 1; i < level; i++) {
-        total += calculateRequiredXP(i);
-    }
-    return total;
-};
-
-/**
- * Calculate what level a user should be based on their total XP
+ * Calculate what level a user has achieved based on their total XP
  */
 export const calculateLevelFromXP = (totalXP: number): number => {
     let level = 1;
-    while (calculateTotalXPForLevel(level + 1) <= totalXP) {
+    while (getXPForLevel(level + 1) <= totalXP) {
         level++;
     }
     return level;
-};
-
-/**
- * Calculate progress towards next level as a percentage
- */
-export const calculateLevelProgress = (totalXP: number): number => {
-    const currentLevel = calculateLevelFromXP(totalXP);
-    const xpForCurrentLevel = calculateTotalXPForLevel(currentLevel);
-    const xpForNextLevel = calculateTotalXPForLevel(currentLevel + 1);
-    
-    const xpInCurrentLevel = totalXP - xpForCurrentLevel;
-    const xpRequiredForNextLevel = xpForNextLevel - xpForCurrentLevel;
-    
-    return Math.floor((xpInCurrentLevel / xpRequiredForNextLevel) * 100);
 }; 

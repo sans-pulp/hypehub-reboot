@@ -2,13 +2,14 @@
 
 import type { Attribute, Goal } from "@/db/schema";
 import { Button } from "@/components/ui/button";
-import { calculateLevelFromXP, calculateLevelProgress } from "@/utils/gameUtils";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Award, Calendar, ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { format } from "date-fns";
+import { useLevelSystemContext } from "@/contexts/LevelSystemContext";
 
 interface DashboardProps {
   attributes: Attribute;
@@ -16,6 +17,7 @@ interface DashboardProps {
 }
 
 export const Dashboard = ({attributes, completedGoals }: DashboardProps) => {
+  const { experience, level, progressToNext, requiredXP } = useLevelSystemContext();
   const attributesList = [
     { name: "Strength", value: attributes.strength, icon: "💪" },
     { name: "Vitality", value: attributes.vitality, icon: "❤️" },
@@ -35,15 +37,24 @@ export const Dashboard = ({attributes, completedGoals }: DashboardProps) => {
       <div className="mb-8 p-6 bg-gray-800 rounded-lg">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">
-            Level {calculateLevelFromXP(attributes.experience)}
+            Level {level}
           </h2>
-          <div className="text-purple-400">XP: {attributes.experience}</div>
+          <div className="text-purple-400">XP: {experience}</div>
         </div>
         <div className="mt-2 w-full bg-gray-700 rounded-full h-4">
-          <div
-            className="bg-purple-600 h-4 rounded-full transition-all"
-            style={{ width: `${calculateLevelProgress(attributes.experience)}%` }}
-          />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  className="bg-purple-600 h-4 rounded-full transition-all"
+                  style={{ width: `${progressToNext}%` }}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Level {level} - {requiredXP} XP to next level</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 

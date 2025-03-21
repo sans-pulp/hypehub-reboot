@@ -12,6 +12,7 @@ import { Goals } from "./views/Goals";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useWeatherContext, WeatherProvider } from "@/contexts/WeatherContext";
 import { useConnectedUsers } from "@/hooks/useConnectedUsers";
+import { LevelSystemProvider, useLevelSystemContext } from "@/contexts/LevelSystemContext";
 
 type ViewType = "dashboard" | "goals" | "social" | "achievements";
 
@@ -36,7 +37,14 @@ const GameContent = ({
 }) => {
   const { isConnected } = useWebSocketContext();
   const { weatherError } = useWeatherContext();
+  const { initializeFromAttributes } = useLevelSystemContext();
   const connectedUsers = useConnectedUsers();
+
+  useEffect(() => {
+    if (gameState.attributes) {
+      initializeFromAttributes(gameState.attributes);
+    }
+  }, [gameState.attributes, initializeFromAttributes]);
 
   const handleViewChange = (view: ViewType) => {
     setGameState((prev) => ({ ...prev, activeView: view }));
@@ -167,9 +175,6 @@ export const AlternativeGameInterface = () => {
     });
 
     setCompletedGoals((prev) => [...prev, goal]);
-
-    // handle level up
-    // const newLevel = calculateLevelFromXP(new)
   };
 
   if (loading) {
@@ -177,15 +182,17 @@ export const AlternativeGameInterface = () => {
   }
 
   return (
-    <WebSocketProvider>
-      <WeatherProvider>
-        <GameContent 
-          gameState={gameState}
-          setGameState={setGameState}
-          onGoalComplete={handleGoalComplete}
-          completedGoals={completedGoals}
-        />
-      </WeatherProvider>
-    </WebSocketProvider>
+    <LevelSystemProvider>
+      <WebSocketProvider>
+        <WeatherProvider>
+          <GameContent 
+            gameState={gameState}
+            setGameState={setGameState}
+            onGoalComplete={handleGoalComplete}
+            completedGoals={completedGoals}
+          />
+        </WeatherProvider>
+      </WebSocketProvider>
+    </LevelSystemProvider>
   );
 };

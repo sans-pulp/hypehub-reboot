@@ -68,7 +68,7 @@ export const updateProfileById = async (id: number, data: Partial<InsertProfile>
     return profile
 }
 
-export const addExperiencePoints = async (profileId: number, points: number) => {
+export const addExperiencePoints = async (profileId: number, experiencePoints: number, newLevel?: number) => {
     return await db.transaction(async (tx) => {
         // Get current attributes
         const [currentAttributes] = await tx.select()
@@ -76,14 +76,14 @@ export const addExperiencePoints = async (profileId: number, points: number) => 
             .where(eq(attributesTable.profileId, profileId));
 
         // Calculate new experience and level
-        const newExperience = currentAttributes.experience + points;
-        const newLevel = calculateLevelFromXP(newExperience);
+        const newExperience = currentAttributes.experience + experiencePoints;
+        const updatedLevel = newLevel ? newLevel : currentAttributes.level;
 
         // Update attributes with new experience and level
         const [updatedAttributes] = await tx.update(attributesTable)
             .set({
                 experience: newExperience,
-                level: newLevel
+                level: updatedLevel
             })
             .where(eq(attributesTable.profileId, profileId))
             .returning();
