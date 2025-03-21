@@ -17,7 +17,7 @@ import {
   CloudDrizzle,
   CloudMoon
 } from "lucide-react";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const getWeatherIcon = (code: number, isDay: 0 | 1) => {

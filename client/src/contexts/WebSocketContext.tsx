@@ -8,12 +8,7 @@ const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8080'
 export const WebSocketProvider = ({children} : {children: React.ReactNode}) => {
     const socket = useWebSocket(WS_URL);
     // console.log("WebSocketProvider mounting...", socket);
-    const contextValue = useMemo(() => socket, [
-        socket.isConnected,
-        socket.send,
-        socket.latestEvent,
-        socket
-    ]);
+    const contextValue = useMemo(() => socket, [socket]);
 
     return (
         <WebSocketContext.Provider value={contextValue}>

@@ -15,6 +15,7 @@ import { Goals } from "./views/Goals";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useWeatherContext, WeatherProvider } from "@/contexts/WeatherContext";
 import { useConnectedUsers } from "@/hooks/useConnectedUsers";
+import { LevelSystemProvider, useLevelSystemContext } from "@/contexts/LevelSystemContext";
 
 type ViewType = "dashboard" | "goals" | "social" | "achievements";
 
@@ -30,14 +31,24 @@ const GameContent = ({
   gameState,
   setGameState,
   onGoalComplete,
-}: {
+  completedGoals
+}: { 
+
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   onGoalComplete: (goalId: number) => void;
+  completedGoals: Goal[];
 }) => {
   const { isConnected } = useWebSocketContext();
   const { weatherError } = useWeatherContext();
+  const { initializeFromAttributes } = useLevelSystemContext();
   const connectedUsers = useConnectedUsers();
+
+  useEffect(() => {
+    if (gameState.attributes) {
+      initializeFromAttributes(gameState.attributes);
+    }
+  }, [gameState.attributes, initializeFromAttributes]);
 
   const handleViewChange = (view: ViewType) => {
     setGameState((prev) => ({ ...prev, activeView: view }));
@@ -67,7 +78,10 @@ const GameContent = ({
         >
           <TabsContent value="dashboard" className="m-0">
             {gameState.attributes && (
-              <Dashboard attributes={gameState.attributes} />
+              <Dashboard
+                attributes={gameState.attributes} 
+                completedGoals={completedGoals}
+              />
             )}
           </TabsContent>
 
@@ -113,6 +127,7 @@ export const AlternativeGameInterface = () => {
   });
   const [loading, setLoading] = useState(true);
   const { send } = useWebSocketContext();
+  const [completedGoals, setCompletedGoals] = useState<Goal[]>([]);
 
   const fetchUserData = async () => {
     try {
@@ -123,6 +138,7 @@ export const AlternativeGameInterface = () => {
         attributes,
         goals,
       }));
+      setCompletedGoals(goals?.filter((goal) => goal.isComplete) || []);
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
@@ -161,7 +177,10 @@ export const AlternativeGameInterface = () => {
         goalType: goal.type,
       },
     });
+    
     fetchUserData();
+    setCompletedGoals((prev) => [...prev, goal]);
+
   };
 
   if (loading) {
@@ -169,14 +188,17 @@ export const AlternativeGameInterface = () => {
   }
 
   return (
-    <WebSocketProvider>
-      <WeatherProvider>
-        <GameContent
-          gameState={gameState}
-          setGameState={setGameState}
-          onGoalComplete={handleGoalComplete}
-        />
-      </WeatherProvider>
-    </WebSocketProvider>
+    <LevelSystemProvider>
+      <WebSocketProvider>
+        <WeatherProvider>
+          <GameContent 
+            gameState={gameState}
+            setGameState={setGameState}
+            onGoalComplete={handleGoalComplete}
+            completedGoals={completedGoals}
+          />
+        </WeatherProvider>
+      </WebSocketProvider>
+    </LevelSystemProvider>
   );
 };
