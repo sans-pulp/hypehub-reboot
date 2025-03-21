@@ -13,19 +13,19 @@ export const Navigation = ({ activeView, onViewChange }: NavigationProps) => {
   const navItems = [
     { id: "dashboard", label: "🏰 Dashboard", value: "dashboard" as ViewType },
     { id: "goals", label: "🎯 Goals", value: "goals" as ViewType },
-    { id: "social", label: "👥 Social", value: "social" as ViewType },
-    {
-      id: "achievements",
-      label: "🏆 Achievements",
-      value: "achievements" as ViewType,
-    },
+    // { id: "social", label: "👥 Social", value: "social" as ViewType },
+    // {
+    //   id: "achievements",
+    //   label: "🏆 Achievements",
+    //   value: "achievements" as ViewType,
+    // },
   ];
 
   return (
     <div className="w-full bg-gray-900  ">
       <div className="container mx-auto px-4">
         <Tabs
-          className="w-fit mx-auto pt-16"
+          className="w-fit mx-auto pt-10"
           value={activeView}
           onValueChange={onViewChange as (value: string) => void}
         >

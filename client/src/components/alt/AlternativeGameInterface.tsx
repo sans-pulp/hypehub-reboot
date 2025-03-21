@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import { getCurrentUserData } from "@/utils/auth";
 import type { Profile, Attribute, Goal } from "@/db/schema";
-import { useWebSocketContext, WebSocketProvider } from "@/contexts/WebSocketContext";
+import {
+  useWebSocketContext,
+  WebSocketProvider,
+} from "@/contexts/WebSocketContext";
 import { LoadingScreen } from "../LoadingScreen";
 import { Header } from "./layout/Header";
 import { Navigation } from "./layout/Navigation";
@@ -24,12 +27,13 @@ interface GameState {
 }
 
 // Separate GameContent component to prevent unnecessary re-renders
-const GameContent = ({ 
-  gameState, 
+const GameContent = ({
+  gameState,
   setGameState,
   onGoalComplete,
   completedGoals
 }: { 
+
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   onGoalComplete: (goalId: number) => void;
@@ -57,17 +61,17 @@ const GameContent = ({
 
   return (
     <div className="alternative-game-interface min-h-screen bg-gray-900">
-      <Header 
-        isConnected={isConnected} 
-        profile={gameState.profile} 
-        connectedUsers={connectedUsers} 
+      <Header
+        isConnected={isConnected}
+        profile={gameState.profile}
+        connectedUsers={connectedUsers}
       />
       <Navigation
         activeView={gameState.activeView}
         onViewChange={handleViewChange}
       />
 
-      <main className="game-content container mx-auto py-6">
+      <main className="game-content container mx-auto pt-20 ">
         <Tabs
           value={gameState.activeView}
           onValueChange={(value) => handleViewChange(value as ViewType)}
@@ -90,15 +94,15 @@ const GameContent = ({
               />
             )}
           </TabsContent>
-
+          {/* 
           <TabsContent value="social" className="m-0">
             <div className="p-6 bg-gray-800 rounded-lg">
               <h2 className="text-xl font-bold text-white mb-4">Social Hub</h2>
               <p className="text-gray-400">Social features coming soon...</p>
             </div>
-          </TabsContent>
+          </TabsContent> */}
 
-          <TabsContent value="achievements" className="m-0">
+          {/* <TabsContent value="achievements" className="m-0">
             <div className="p-6 bg-gray-800 rounded-lg">
               <h2 className="text-xl font-bold text-white mb-4">
                 Achievements
@@ -107,7 +111,7 @@ const GameContent = ({
                 Achievements system coming soon...
               </p>
             </div>
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
       </main>
     </div>
@@ -173,8 +177,10 @@ export const AlternativeGameInterface = () => {
         goalType: goal.type,
       },
     });
-
+    
+    fetchUserData();
     setCompletedGoals((prev) => [...prev, goal]);
+
   };
 
   if (loading) {
