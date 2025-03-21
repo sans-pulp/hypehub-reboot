@@ -26,11 +26,13 @@ interface GameState {
 const GameContent = ({ 
   gameState, 
   setGameState,
-  onGoalComplete 
+  onGoalComplete,
+  completedGoals
 }: { 
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   onGoalComplete: (goalId: number) => void;
+  completedGoals: Goal[];
 }) => {
   const { isConnected } = useWebSocketContext();
   const { weatherError } = useWeatherContext();
@@ -65,7 +67,8 @@ const GameContent = ({
           <TabsContent value="dashboard" className="m-0">
             {gameState.attributes && (
               <Dashboard
-                attributes={gameState.attributes}
+                attributes={gameState.attributes} 
+                completedGoals={completedGoals}
               />
             )}
           </TabsContent>
@@ -112,6 +115,7 @@ export const AlternativeGameInterface = () => {
   });
   const [loading, setLoading] = useState(true);
   const { send } = useWebSocketContext();
+  const [completedGoals, setCompletedGoals] = useState<Goal[]>([]);
 
   const fetchUserData = async () => {
     try {
@@ -122,6 +126,7 @@ export const AlternativeGameInterface = () => {
         attributes,
         goals,
       }));
+      setCompletedGoals(goals?.filter((goal) => goal.isComplete) || []);
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
@@ -160,6 +165,11 @@ export const AlternativeGameInterface = () => {
         goalType: goal.type,
       },
     });
+
+    setCompletedGoals((prev) => [...prev, goal]);
+
+    // handle level up
+    // const newLevel = calculateLevelFromXP(new)
   };
 
   if (loading) {
@@ -173,6 +183,7 @@ export const AlternativeGameInterface = () => {
           gameState={gameState}
           setGameState={setGameState}
           onGoalComplete={handleGoalComplete}
+          completedGoals={completedGoals}
         />
       </WeatherProvider>
     </WebSocketProvider>

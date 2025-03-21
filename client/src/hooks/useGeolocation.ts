@@ -54,7 +54,7 @@ export const useGeolocation = () => {
                 },
                 timestamp: parsed.timestamp
             } as GeolocationPosition;
-        } catch (e) {
+        } catch {
             // Clear invalid stored location data
             localStorage.removeItem('lastLocation');
             return null;

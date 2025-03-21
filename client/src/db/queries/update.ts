@@ -1,8 +1,9 @@
 'use server'
 
 import { db } from "..";  
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { goalsTable, attributesTable, type AttributeReward, profilesTable, InsertProfile } from "../schema";
+import { calculateLevelFromXP } from "@/utils/gameUtils";
 
 export const completeGoal = async (goalId: number, profileId: number) => {
     return await db.transaction(async (tx) => {
@@ -17,7 +18,7 @@ export const completeGoal = async (goalId: number, profileId: number) => {
 
         // Step 2: Mark the goal as complete
         await tx.update(goalsTable)
-            .set({ isComplete: true })
+            .set({ isComplete: true, completedAt: new Date() })
             .where(eq(goalsTable.id, goalId));
 
         // Step 3: Get current attributes
@@ -43,9 +44,15 @@ export const completeGoal = async (goalId: number, profileId: number) => {
             newAttributes.experience += reward.points;
         }
 
-        // Step 6: Update the database with new values
+        // Step 6: Calculate new level based on total experience
+        const newLevel = calculateLevelFromXP(newAttributes.experience);
+
+        // Step 7: Update the database with new values including level
         const [updatedAttributes] = await tx.update(attributesTable)
-            .set(newAttributes)
+            .set({
+                ...newAttributes,
+                level: newLevel
+            })
             .where(eq(attributesTable.profileId, profileId))
             .returning();
 
@@ -62,14 +69,27 @@ export const updateProfileById = async (id: number, data: Partial<InsertProfile>
 }
 
 export const addExperiencePoints = async (profileId: number, points: number) => {
-    const [updatedAttributes] = await db.update(attributesTable)
-        .set({
-            experience: sql`${attributesTable.experience} + ${points}`
-        })
-        .where(eq(attributesTable.profileId, profileId))
-        .returning();
-    
-    return updatedAttributes;
+    return await db.transaction(async (tx) => {
+        // Get current attributes
+        const [currentAttributes] = await tx.select()
+            .from(attributesTable)
+            .where(eq(attributesTable.profileId, profileId));
+
+        // Calculate new experience and level
+        const newExperience = currentAttributes.experience + points;
+        const newLevel = calculateLevelFromXP(newExperience);
+
+        // Update attributes with new experience and level
+        const [updatedAttributes] = await tx.update(attributesTable)
+            .set({
+                experience: newExperience,
+                level: newLevel
+            })
+            .where(eq(attributesTable.profileId, profileId))
+            .returning();
+        
+        return updatedAttributes;
+    });
 }
 
 
