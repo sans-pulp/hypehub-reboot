@@ -28,29 +28,33 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ATTRIBUTE_COLORS, MIN_ATTRIBUTE_POINTS, MAX_ATTRIBUTE_POINTS } from "@/components/ui/constants";
+import {
+  ATTRIBUTE_COLORS,
+  MIN_ATTRIBUTE_POINTS,
+  MAX_ATTRIBUTE_POINTS,
+} from "@/components/ui/constants";
 
-// Constants for the form
+// --- Type Definitions ---
 const GOAL_TYPES = ["Daily", "Mission", "Quest"] as const;
 type GoalType = (typeof GOAL_TYPES)[number];
 
 const ATTRIBUTE_TYPES = [
-  "Strength",
-  "Vitality",
-  "Knowledge",
-  "Social",
-  "Willpower",
+  "strength",
+  "vitality",
+  "knowledge",
+  "social",
+  "willpower",
 ] as const;
 type AttributeName = (typeof ATTRIBUTE_TYPES)[number];
 
-// Templates for quick goal creation
+// --- Predefined Goal Templates ---
 const GOAL_TEMPLATES = [
   {
     name: "Workout Session",
     description: "Complete a 30-minute workout",
     type: "Daily" as GoalType,
-    attributes: ["Strength", "Vitality"] as AttributeName[],
-    attributePoints: { Strength: 2, Vitality: 2 } as Record<
+    attributes: ["strength", "vitality"] as AttributeName[],
+    attributePoints: { strength: 2, vitality: 2 } as Record<
       AttributeName,
       number
     >,
@@ -59,28 +63,29 @@ const GOAL_TEMPLATES = [
     name: "Read a Book",
     description: "Read at least 30 pages of a book",
     type: "Daily" as GoalType,
-    attributes: ["Knowledge"] as AttributeName[],
-    attributePoints: { Knowledge: 3 } as Record<AttributeName, number>,
+    attributes: ["knowledge"] as AttributeName[],
+    attributePoints: { knowledge: 3 } as Record<AttributeName, number>,
   },
   {
     name: "Social Meetup",
     description: "Meet with friends or attend a social event",
     type: "Mission" as GoalType,
-    attributes: ["Social"] as AttributeName[],
-    attributePoints: { Social: 4 } as Record<AttributeName, number>,
+    attributes: ["social"] as AttributeName[],
+    attributePoints: { social: 4 } as Record<AttributeName, number>,
   },
   {
     name: "Learn a New Skill",
     description: "Complete a course or tutorial on a new skill",
     type: "Quest" as GoalType,
-    attributes: ["Knowledge", "Willpower"] as AttributeName[],
-    attributePoints: { Knowledge: 3, Willpower: 2 } as Record<
+    attributes: ["knowledge", "willpower"] as AttributeName[],
+    attributePoints: { knowledge: 3, willpower: 2 } as Record<
       AttributeName,
       number
     >,
   },
 ];
 
+// --- Form Interface ---
 interface GoalFormData {
   name: string;
   description: string;
@@ -90,6 +95,7 @@ interface GoalFormData {
   targetDate: string;
 }
 
+// Default form state with tomorrow as target date
 const emptyGoalFormData: GoalFormData = {
   name: "",
   description: "",
@@ -108,6 +114,7 @@ export const EnhancedGoalCreation = ({
   profileId,
   onGoalCreated,
 }: EnhancedGoalCreationProps) => {
+  // --- State Management ---
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<GoalFormData>(emptyGoalFormData);
   const [creationMethod, setCreationMethod] = useState<"manual" | "template">(
@@ -117,7 +124,7 @@ export const EnhancedGoalCreation = ({
   const [isValid, setIsValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Update target date when goal type changes
+  // Automatically update target date when goal type changes to Daily
   useEffect(() => {
     if (formData.type === "Daily") {
       const tomorrow = addDays(new Date(), 1);
@@ -128,7 +135,7 @@ export const EnhancedGoalCreation = ({
     }
   }, [formData.type]);
 
-  // Form validation
+  // Validate form data and update validity state
   useEffect(() => {
     const hasValidTargetDate =
       formData.type === "Daily" || formData.targetDate !== "";
@@ -141,6 +148,9 @@ export const EnhancedGoalCreation = ({
     setIsValid(isFormValid);
   }, [formData]);
 
+  // --- Event Handlers ---
+
+  // Reset form to initial state
   const resetForm = () => {
     setFormData(emptyGoalFormData);
     setCreationMethod("manual");
@@ -148,6 +158,7 @@ export const EnhancedGoalCreation = ({
     setIsSubmitting(false);
   };
 
+  // Handle form submission and goal creation
   const handleSubmit = async () => {
     if (!isValid) {
       setError("Please fill in all required fields.");
@@ -185,6 +196,7 @@ export const EnhancedGoalCreation = ({
     }
   };
 
+  // Toggle attribute selection (add/remove)
   const handleAttributeToggle = (attribute: AttributeName) => {
     setFormData((prev) => {
       const isSelected = prev.attributes.includes(attribute);
@@ -216,6 +228,7 @@ export const EnhancedGoalCreation = ({
     });
   };
 
+  // Update attribute points within min/max constraints
   const handlePointsChange = (attribute: AttributeName, points: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -229,6 +242,7 @@ export const EnhancedGoalCreation = ({
     }));
   };
 
+  // Apply selected template to form data
   const applyTemplate = (template: (typeof GOAL_TEMPLATES)[number]) => {
     setFormData({
       ...template,
@@ -237,6 +251,7 @@ export const EnhancedGoalCreation = ({
     setCreationMethod("manual");
   };
 
+  // Get appropriate CSS color class for attribute badges
   const getAttributeColor = (attribute: string) => {
     switch (attribute.toLowerCase()) {
       case "strength":
@@ -262,6 +277,7 @@ export const EnhancedGoalCreation = ({
         if (!isOpen) resetForm();
       }}
     >
+      {/* Dialog Trigger Button */}
       <DialogTrigger asChild>
         <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
           <Plus className="mr-2 h-4 w-4" />
@@ -269,6 +285,8 @@ export const EnhancedGoalCreation = ({
           <span className="sm:hidden">New</span>
         </Button>
       </DialogTrigger>
+
+      {/* Goal Creation Dialog */}
       <DialogContent className="w-[95vw] max-w-3xl p-4 sm:p-6 bg-gray-900 border-gray-800">
         <DialogHeader className="mb-3 sm:mb-4">
           <DialogTitle className="text-xl sm:text-2xl text-white">
@@ -279,6 +297,7 @@ export const EnhancedGoalCreation = ({
           </DialogDescription>
         </DialogHeader>
 
+        {/* Creation Method Tabs */}
         <Tabs
           value={creationMethod}
           onValueChange={(v) => setCreationMethod(v as "manual" | "template")}
@@ -303,10 +322,10 @@ export const EnhancedGoalCreation = ({
             </TabsTrigger>
           </TabsList>
 
-          {/* Manual Creation Tab */}
+          {/* Manual Creation Form */}
           <TabsContent value="manual" className="mt-0">
             <div className="grid gap-4 sm:gap-6">
-              {/* Name & Description */}
+              {/* Name & Description Fields */}
               <div>
                 <Label
                   htmlFor="name"
@@ -348,7 +367,7 @@ export const EnhancedGoalCreation = ({
                 />
               </div>
 
-              {/* Goal Type */}
+              {/* Goal Type Selector */}
               <div>
                 <Label
                   htmlFor="type"
@@ -386,7 +405,7 @@ export const EnhancedGoalCreation = ({
                 </p>
               </div>
 
-              {/* Target Date */}
+              {/* Target Date (Only for Mission and Quest types) */}
               {formData.type !== "Daily" && (
                 <div>
                   <Label
@@ -412,7 +431,7 @@ export const EnhancedGoalCreation = ({
                 </div>
               )}
 
-              {/* Attributes */}
+              {/* Attribute Selection */}
               <div>
                 <Label className="text-white text-sm mb-1.5 sm:mb-2 block">
                   Attributes to Improve
@@ -439,6 +458,7 @@ export const EnhancedGoalCreation = ({
                   ))}
                 </div>
 
+                {/* Attribute Points Adjustment */}
                 {formData.attributes.length > 0 && (
                   <div className="space-y-3 sm:space-y-4 bg-gray-800 p-3 sm:p-4 rounded-md">
                     <Label className="text-white text-sm block">
@@ -505,7 +525,7 @@ export const EnhancedGoalCreation = ({
             </div>
           </TabsContent>
 
-          {/* Template Tab */}
+          {/* Template Selection */}
           <TabsContent value="template" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               {GOAL_TEMPLATES.map((template, index) => (
@@ -553,7 +573,7 @@ export const EnhancedGoalCreation = ({
           </TabsContent>
         </Tabs>
 
-        {/* Completion Indicator */}
+        {/* Form Completion Indicator */}
         <div className="mt-4 sm:mt-6">
           <div className="flex justify-between items-center mb-1.5 sm:mb-2">
             <span className="text-gray-400 text-xs sm:text-sm">
@@ -566,12 +586,14 @@ export const EnhancedGoalCreation = ({
           <Progress value={isValid ? 100 : 0} className="h-1.5 sm:h-2" />
         </div>
 
+        {/* Error Message Display */}
         {error && (
           <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-red-900/30 border border-red-800 rounded-md">
             <p className="text-red-400 text-xs sm:text-sm">{error}</p>
           </div>
         )}
 
+        {/* Dialog Footer with Action Buttons */}
         <DialogFooter className="mt-4 sm:mt-6 flex-col xs:flex-row gap-2">
           <Button
             variant="outline"

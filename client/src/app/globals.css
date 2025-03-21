@@ -200,3 +200,9 @@
     transform: var(--p) rotateZ(360deg) rotateY(720deg) rotateX(360deg) var(--a);
   }
 }
+
+.badge {
+  @apply  
+  px-3 py-1 
+  capitalize text-xs;
+}
