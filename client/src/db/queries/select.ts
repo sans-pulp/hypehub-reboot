@@ -11,6 +11,13 @@ export const getGoalsByProfileId = async (id: number) => {
     return goals
 }
 
+export const getProfileById = async (id: number) => {
+    const [profile] = await db.select()
+    .from(profilesTable)
+    .where(eq(profilesTable.id, id))
+    return profile
+}
+
 export const getProfileByEmail = async (email: string) => {
     const [profile] = await db.select()
     .from(profilesTable)
