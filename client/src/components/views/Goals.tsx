@@ -41,31 +41,36 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
 
   if (!goals) return null;
 
-  // Extract all unique attributes from goals
-  const allAttributes = Array.from(
-    new Set(
-      goals.flatMap(
-        (goal) => goal.attributes?.map((attr) => attr.toLowerCase()) || []
+    // Extract all unique attributes from goals
+    const allAttributes = Array.from(
+      new Set(
+        goals.flatMap(
+          (goal) => goal.attributes?.map((attr) => attr.toLowerCase()) || []
+        )
       )
-    )
-  ).sort();
+    ).sort();
+  
+    const filteredGoals = goals.filter((goal) => {
+      // Filter by completion status
+      if (goal.isComplete) return false;
+  
+      // Filter by goal type
+      const typeMatches = activeFilter === "all" || goal.type === activeFilter;
+  
+      // Filter by selected attributes
+      const attributesMatch =
+        selectedAttributes.length === 0 ||
+        selectedAttributes.some((attr) =>
+          goal.attributes?.map((attr) => attr.toLowerCase()).includes(attr)
+        );
+  
+      return typeMatches && attributesMatch;
+    });
 
-  const filteredGoals = goals.filter((goal) => {
-    // Filter by completion status
-    if (goal.isComplete) return false;
-
-    // Filter by goal type
-    const typeMatches = activeFilter === "all" || goal.type === activeFilter;
-
-    // Filter by selected attributes
-    const attributesMatch =
-      selectedAttributes.length === 0 ||
-      selectedAttributes.some((attr) =>
-        goal.attributes?.map((attr) => attr.toLowerCase()).includes(attr)
-      );
-
-    return typeMatches && attributesMatch;
-  });
+  // const filteredGoals = goals.filter((goal) => {
+  //   if (activeFilter === "all") return !goal.isComplete;
+  //   return goal.type === activeFilter && !goal.isComplete;
+  // });
 
   const handleCompleteGoal = async (goalId: number) => {
     try {
@@ -134,6 +139,8 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
   console.log({
     goals,
   });
+
+
   return (
     <div className="goals-view space-y-6">
       {/* Header with stats */}
@@ -196,8 +203,8 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
           </Select>
         </div>
 
-        {/* Attributes Filter */}
-        <div className="flex items-center gap-2">
+       {/* Attributes Filter */}
+       <div className="flex items-center gap-2">
           <div className="flex items-center">
             <span className="text-gray-400 mr-2 text-sm">Attributes:</span>
             <Dialog
@@ -283,6 +290,7 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
           )}
         </div>
       </div>
+
       {/* Goals List */}
       <div className="space-y-4">
         {filteredGoals.length === 0 ? (

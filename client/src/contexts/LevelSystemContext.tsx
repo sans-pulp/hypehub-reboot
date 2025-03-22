@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext } from "react";
 import { useLevelSystem } from "@/hooks/useLevelSystem";
 
 const LevelSystemContext = createContext<ReturnType<typeof useLevelSystem> | null>(null);

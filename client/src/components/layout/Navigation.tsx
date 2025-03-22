@@ -13,12 +13,12 @@ export const Navigation = ({ activeView, onViewChange }: NavigationProps) => {
   const navItems = [
     { id: "dashboard", label: "🏰 Dashboard", value: "dashboard" as ViewType },
     { id: "goals", label: "🎯 Goals", value: "goals" as ViewType },
-    // { id: "social", label: "👥 Social", value: "social" as ViewType },
-    // {
-    //   id: "achievements",
-    //   label: "🏆 Achievements",
-    //   value: "achievements" as ViewType,
-    // },
+    { id: "social", label: "👥 Social", value: "social" as ViewType },
+    {
+      id: "achievements",
+      label: "🏆 Achievements",
+      value: "achievements" as ViewType,
+    },
   ];
 
   return (
