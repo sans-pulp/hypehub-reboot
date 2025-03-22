@@ -6,8 +6,7 @@ import { AttributeType } from "@/db/schema";
 import { Plus, Sparkles, Target } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { GOAL_TYPES, ATTRIBUTE_COLORS, MIN_ATTRIBUTE_POINTS, MAX_ATTRIBUTE_POINTS } from "@/components/ui/constants";
-import type { GoalType, AttributeName, GoalFormData, GoalTemplate, GoalFormProps } from "@/types/goals";
-
+import type { GoalType, GoalFormData, GoalTemplate, GoalFormProps } from "@/types/goals";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +31,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
 // Constants for attributes
-const ATTRIBUTE_TYPES: AttributeName[] = ["strength", "vitality", "knowledge", "social", "willpower"];
+const ATTRIBUTE_TYPES: AttributeType[] = ["strength", "vitality", "knowledge", "social", "willpower"];
+
 
 // Templates for quick goal creation
 const GOAL_TEMPLATES: GoalTemplate[] = [
@@ -40,9 +40,9 @@ const GOAL_TEMPLATES: GoalTemplate[] = [
     name: "Workout Session",
     description: "Complete a 30-minute workout",
     type: "Daily" as GoalType,
-    attributes: ["strength", "vitality"] as AttributeName[],
+    attributes: ["strength", "vitality"] as AttributeType[],
     attributePoints: { strength: 2, vitality: 2 } as Record<
-      AttributeName,
+      AttributeType,
       number
     >,
   },
@@ -50,23 +50,23 @@ const GOAL_TEMPLATES: GoalTemplate[] = [
     name: "Read a Book",
     description: "Read at least 30 pages of a book",
     type: "Daily" as GoalType,
-    attributes: ["knowledge"] as AttributeName[],
-    attributePoints: { knowledge: 3 } as Record<AttributeName, number>,
+    attributes: ["knowledge"] as AttributeType[],
+    attributePoints: { knowledge: 3 } as Record<AttributeType, number>,
   },
   {
     name: "Social Meetup",
     description: "Meet with friends or attend a social event",
     type: "Mission" as GoalType,
-    attributes: ["social"] as AttributeName[],
-    attributePoints: { social: 4 } as Record<AttributeName, number>,
+    attributes: ["social"] as AttributeType[],
+    attributePoints: { social: 4 } as Record<AttributeType, number>,
   },
   {
     name: "Learn a New Skill",
     description: "Complete a course or tutorial on a new skill",
     type: "Quest" as GoalType,
-    attributes: ["knowledge", "willpower"] as AttributeName[],
+    attributes: ["knowledge", "willpower"] as AttributeType[],
     attributePoints: { knowledge: 3, willpower: 2 } as Record<
-      AttributeName,
+      AttributeType,
       number
     >,
   },
@@ -166,7 +166,7 @@ export const EnhancedGoalCreation = ({
   };
 
   // Toggle attribute selection (add/remove)
-  const handleAttributeToggle = (attribute: AttributeName) => {
+  const handleAttributeToggle = (attribute: AttributeType) => {
     setFormData((prev) => {
       const isSelected = prev.attributes.includes(attribute);
 
@@ -198,7 +198,7 @@ export const EnhancedGoalCreation = ({
   };
 
   // update attribute points within min/max constraints
-  const handlePointsChange = (attribute: AttributeName, points: number) => {
+  const handlePointsChange = (attribute: AttributeType, points: number) => {
     setFormData((prev) => ({
       ...prev,
       attributePoints: {

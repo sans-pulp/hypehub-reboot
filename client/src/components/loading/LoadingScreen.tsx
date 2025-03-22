@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Progress } from '@/components/ui/progress'
-import { LoaderCube } from './LoaderCube'
+import { LoaderCube } from '@/components/loading/LoaderCube'
 
 export const LoadingScreen = () => {
     const [progress, setProgress] = useState(0)

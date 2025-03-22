@@ -9,7 +9,6 @@ export type GoalType = typeof GOAL_TYPES[number];
 /**
  * Type representing the possible attribute types (Strength, Vitality, etc.)
  */
-export type AttributeName = AttributeType;
 
 /**
  * Interface for goal form data used in goal creation/editing
@@ -18,8 +17,8 @@ export interface GoalFormData {
     name: string;
     description: string;
     type: GoalType;
-    attributes: AttributeName[];
-    attributePoints: Partial<Record<AttributeName, number>>;
+    attributes: AttributeType[];
+    attributePoints: Partial<Record<AttributeType, number>>;
     targetDate: string;
 }
 
@@ -30,18 +29,18 @@ export interface GoalTemplate {
     name: string;
     description: string;
     type: GoalType;
-    attributes: AttributeName[];
-    attributePoints: Partial<Record<AttributeName, number>>;
+    attributes: AttributeType[];
+    attributePoints: Partial<Record<AttributeType, number>>;
 }
 
 /**
  * Props interface for attribute selection components
  */
 export interface AttributeSelectionProps {
-    selectedAttributes: AttributeName[];
-    attributePoints: Partial<Record<AttributeName, number>>;
-    onAttributeToggle: (attribute: AttributeName) => void;
-    onPointsChange: (attribute: AttributeName, points: number) => void;
+    selectedAttributes: AttributeType[];
+    attributePoints: Partial<Record<AttributeType, number>>;
+    onAttributeToggle: (attribute: AttributeType) => void;
+    onPointsChange: (attribute: AttributeType, points: number) => void;
 }
 
 /**
@@ -61,8 +60,8 @@ export interface GoalDisplayProps {
     name: string;
     description: string;
     type: GoalType;
-    attributes: AttributeName[];
-    attributePoints: Partial<Record<AttributeName, number>>;
+    attributes: AttributeType[];
+    attributePoints: Partial<Record<AttributeType, number>>;
     targetDate: string;
     isComplete: boolean;
     onComplete?: (goalId: number) => void;
