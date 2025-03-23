@@ -59,7 +59,7 @@ export async function uploadAvatar(file: File, profileId: number): Promise<Profi
     // Create file options
     const fileOptions = { contentType: file.type }
     // Upload the file
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
     .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET_NAME!)
     .upload(filePath, file, fileOptions)
 
