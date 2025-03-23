@@ -91,7 +91,7 @@ export const EditProfile = ({profile}: {profile: Profile}) => {
                         Edit Profile
                     </DialogTitle>
                     <DialogDescription className="font-grotesk text-base text-gray-400">
-                        You can change your profile information here. Click save when you're done.
+                        You can change your profile information here. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4 font-pixel">

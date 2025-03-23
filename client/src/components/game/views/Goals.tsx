@@ -3,27 +3,8 @@
 import { useState } from "react";
 import type { Goal } from "@/db/schema";
 import { completeGoal } from "@/db/queries/update";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { EnhancedGoalCreation } from "./EnhancedGoalCreation";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { FilterIcon, XIcon } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { GoalDialog } from "./GoalDialog";
 import { GoalFilters } from "./GoalFilters";
 
@@ -85,7 +66,6 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
   const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [completingGoalId, setCompletingGoalId] = useState<number | null>(null);
-  const [attributeDialogOpen, setAttributeDialogOpen] = useState(false);
 
   if (!goals) return null;
 

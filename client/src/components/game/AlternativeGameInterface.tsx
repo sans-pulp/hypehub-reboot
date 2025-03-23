@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getCurrentUserData } from "@/utils/auth";
-import type { Profile, Attribute, Goal } from "@/db/schema";
+import type { Goal } from "@/db/schema";
 import { useWebSocketContext, WebSocketProvider } from "@/contexts/WebSocketContext";
 import { WeatherProvider } from "@/contexts/WeatherContext";
 import { LevelSystemProvider } from "@/contexts/LevelSystemContext";
