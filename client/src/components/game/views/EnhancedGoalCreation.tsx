@@ -5,7 +5,7 @@ import { createGoal } from "@/app/goals/actions";
 import { AttributeType } from "@/db/schema";
 import { Plus, Sparkles, Target } from "lucide-react";
 import { format, addDays } from "date-fns";
-import { GOAL_TYPES, ATTRIBUTE_COLORS, MIN_ATTRIBUTE_POINTS, MAX_ATTRIBUTE_POINTS } from "@/components/ui/constants";
+import { GOAL_TYPES, ATTRIBUTE_COLORS, ATTRIBUTE_POINTS_LIMITS } from "@/components/ui/constants";
 import type { GoalType, GoalFormData, GoalTemplate, GoalFormProps } from "@/types/goals";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +29,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { GoalPointsGuide } from './GoalPointsGuide';
 
 // Constants for attributes
 const ATTRIBUTE_TYPES: AttributeType[] = ["strength", "vitality", "knowledge", "social", "willpower"];
@@ -199,13 +200,15 @@ export const EnhancedGoalCreation = ({
 
   // update attribute points within min/max constraints
   const handlePointsChange = (attribute: AttributeType, points: number) => {
+    const limits = ATTRIBUTE_POINTS_LIMITS[formData.type.toLowerCase() as keyof typeof ATTRIBUTE_POINTS_LIMITS];
+    
     setFormData((prev) => ({
       ...prev,
       attributePoints: {
         ...prev.attributePoints,
         [attribute]: Math.max(
-          MIN_ATTRIBUTE_POINTS,
-          Math.min(MAX_ATTRIBUTE_POINTS, points)
+          limits.min,
+          Math.min(limits.max, points)
         ),
       },
     }));
@@ -238,6 +241,29 @@ export const EnhancedGoalCreation = ({
     }
   };
 
+  const handleGoalTypeChange = (newType: GoalType) => {
+    const newLimits = ATTRIBUTE_POINTS_LIMITS[newType.toLowerCase() as keyof typeof ATTRIBUTE_POINTS_LIMITS];
+    
+    setFormData((prev) => {
+      const updatedPoints = { ...prev.attributePoints };
+      
+      // Adjust all existing attribute points to fit within new limits
+      prev.attributes.forEach(attribute => {
+        const currentPoints = updatedPoints[attribute] || newLimits.min;
+        updatedPoints[attribute] = Math.max(
+          newLimits.min,
+          Math.min(newLimits.max, currentPoints)
+        );
+      });
+
+      return {
+        ...prev,
+        type: newType,
+        attributePoints: updatedPoints,
+      };
+    });
+  };
+
   return (
     <Dialog
       open={open}
@@ -247,7 +273,7 @@ export const EnhancedGoalCreation = ({
       }}
     >
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
+        <Button className="bg-gradient-to-r font-pixel from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
           <Plus className="mr-2 h-4 w-4" />
           <span className="hidden sm:inline">Create Goal</span>
           <span className="sm:hidden">New</span>
@@ -271,19 +297,19 @@ export const EnhancedGoalCreation = ({
           <TabsList className="w-full grid grid-cols-2 h-fit mb-4 sm:mb-6">
             <TabsTrigger
               value="manual"
-              className="text-xs sm:text-sm md:text-base px-2 py-1.5 sm:py-2"
+              className="text-xs sm:text-sm md:text-base px-2 py-1.5 sm:py-2 "
             >
               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">Create Manually</span>
-              <span className="xs:hidden">Manual</span>
+              <span className="hidden xs:inline font-grotesk">Create Manually</span>
+              <span className="xs:hidden font-grotesk text-lg">Manual</span>
             </TabsTrigger>
             <TabsTrigger
               value="template"
               className="text-xs sm:text-sm md:text-base px-2 py-1.5 sm:py-2"
             >
               <Target className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">Use Template</span>
-              <span className="xs:hidden">Template</span>
+              <span className="hidden xs:inline font-grotesk">Use Template</span>
+              <span className="xs:hidden font-grotesk text-lg">Template</span>
             </TabsTrigger>
           </TabsList>
 
@@ -305,7 +331,7 @@ export const EnhancedGoalCreation = ({
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, name: e.target.value }))
                   }
-                  className="hypehub-input"
+                  className="hypehub-input sm:text-sm md:text-base"
                 />
               </div>
 
@@ -326,7 +352,7 @@ export const EnhancedGoalCreation = ({
                       description: e.target.value,
                     }))
                   }
-                  className="hypehub-textarea"
+                  className="hypehub-textarea sm:text-sm md:text-base"
                   rows={3}
                   maxLength={500}
                 />
@@ -342,14 +368,12 @@ export const EnhancedGoalCreation = ({
                 </Label>
                 <Select
                   value={formData.type}
-                  onValueChange={(value: GoalType) =>
-                    setFormData((prev) => ({ ...prev, type: value }))
-                  }
+                  onValueChange={(value: GoalType) => handleGoalTypeChange(value)}
                 >
-                  <SelectTrigger className="hypehub-input">
+                  <SelectTrigger className="hypehub-input font-pixel text-xs">
                     <SelectValue placeholder="Select a goal type" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700 text-white text-sm sm:text-base">
+                  <SelectContent className="bg-gray-800 border-gray-700 text-white text-xs sm:text-base">
                     {GOAL_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type === "Daily" && "📋 "}
@@ -364,10 +388,11 @@ export const EnhancedGoalCreation = ({
                   {formData.type === "Daily" &&
                     "Daily goals reset every day and are meant for building habits."}
                   {formData.type === "Mission" &&
-                    "Missions are medium-term goals that might take a few days to complete."}
+                    "Missions are medium-term goals that might take a few days to weeks to complete."}
                   {formData.type === "Quest" &&
                     "Quests are significant achievements that require longer-term commitment."}
                 </p>
+                {formData.type && <GoalPointsGuide type={formData.type} />}
               </div>
 
               {/* Target Date */}
@@ -390,7 +415,7 @@ export const EnhancedGoalCreation = ({
                           targetDate: e.target.value,
                         }))
                       }
-                      className="hypehub-input [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                      className="hypehub-input [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert font-body text-lg"
                     />
                   </div>
                 </div>
@@ -411,14 +436,14 @@ export const EnhancedGoalCreation = ({
                           ? "default"
                           : "outline"
                       }
-                      className={`justify-center text-xs sm:text-sm py-1 sm:py-2 px-2 ${
+                      className={`justify-center text-lg sm:text-sm md:text-base py-1 sm:py-2 px-2 ${
                         formData.attributes.includes(attribute)
                           ? "bg-gray-700 border-gray-600"
                           : "bg-gray-800 border-gray-700 text-gray-300"
                       }`}
                       onClick={() => handleAttributeToggle(attribute)}
                     >
-                      {attribute}
+                      {attribute.charAt(0).toUpperCase() + attribute.slice(1)}
                     </Button>
                   ))}
                 </div>
@@ -428,61 +453,46 @@ export const EnhancedGoalCreation = ({
                     <Label className="text-white text-sm block">
                       Attribute Points
                     </Label>
-                    {formData.attributes.map((attribute) => (
-                      <div
-                        key={attribute}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center">
-                          <Badge
-                            className={`${getAttributeColor(
-                              attribute
-                            )} mr-2 text-xs sm:text-sm`}
-                          >
-                            {attribute}
-                          </Badge>
+                    {formData.attributes.map((attribute) => {
+                      const limits = ATTRIBUTE_POINTS_LIMITS[formData.type.toLowerCase() as keyof typeof ATTRIBUTE_POINTS_LIMITS];
+                      return (
+                        <div
+                          key={attribute}
+                          className="flex items-center justify-between"
+                        >
+                          <div className="flex items-center">
+                            <Badge
+                              className={`${getAttributeColor(
+                                attribute
+                              )} mr-2 text-lg sm:text-xs`}
+                            >
+                              {attribute.charAt(0).toUpperCase() + attribute.slice(1)}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handlePointsChange(attribute, (formData.attributePoints[attribute] || limits.min) - 1)}
+                              disabled={(formData.attributePoints[attribute] || limits.min) <= limits.min}
+                            >
+                              -
+                            </Button>
+                            <span className="w-12 text-center">
+                              {(formData.attributePoints[attribute] || limits.min) < limits.min ? limits.min : (formData.attributePoints[attribute] || limits.min)}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handlePointsChange(attribute, (formData.attributePoints[attribute] || limits.min) + 1)}
+                              disabled={(formData.attributePoints[attribute] || limits.min) >= limits.max}
+                            >
+                              +
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex items-center space-x-1.5 sm:space-x-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-gray-700"
-                            onClick={() =>
-                              handlePointsChange(
-                                attribute,
-                                (formData.attributePoints[attribute] || 1) - 1
-                              )
-                            }
-                            disabled={
-                              (formData.attributePoints[attribute] || 1) <=
-                              MIN_ATTRIBUTE_POINTS
-                            }
-                          >
-                            -
-                          </Button>
-                          <span className="text-white w-3 sm:w-4 text-center text-xs sm:text-sm">
-                            {formData.attributePoints[attribute] || 1}
-                          </span>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-gray-700"
-                            onClick={() =>
-                              handlePointsChange(
-                                attribute,
-                                (formData.attributePoints[attribute] || 1) + 1
-                              )
-                            }
-                            disabled={
-                              (formData.attributePoints[attribute] || 1) >=
-                              MAX_ATTRIBUTE_POINTS
-                            }
-                          >
-                            +
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -559,14 +569,14 @@ export const EnhancedGoalCreation = ({
         <DialogFooter className="mt-4 sm:mt-6 flex-col xs:flex-row gap-2">
           <Button
             variant="outline"
-            className="border-gray-700 text-gray-300 text-xs sm:text-sm h-10"
+            className="border-gray-700 text-gray-300 text-xs sm:text-sm h-10 font-pixel"
             onClick={() => setOpen(false)}
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-xs sm:text-sm h-10"
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-xs sm:text-sm h-10 font-pixel"
             onClick={handleSubmit}
             disabled={!isValid || isSubmitting}
           >
