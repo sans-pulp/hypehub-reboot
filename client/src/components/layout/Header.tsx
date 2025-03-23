@@ -3,7 +3,10 @@
 import type { Profile } from "@/db/schema";
 import { WeatherStatus } from "@/components/weather/WeatherStatus";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { LogoutButton } from "@/components/auth/LogoutButton";
+import { EditProfile } from "@/components/auth/profile/EditProfile";
 interface HeaderProps {
   isConnected: boolean;
   profile: Profile | null;
@@ -34,16 +37,25 @@ export const Header = ({ isConnected, profile, connectedUsers }: HeaderProps) =>
           </TooltipProvider>
 
         {/* Right section - Weather and Profile */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
           <WeatherStatus />
           {profile && (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center">
-                <span className="text-white font-bold">
-                  {profile.firstName[0]}
-                  {profile.lastName[0]}
-                </span>
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Avatar>
+                    <AvatarImage src={profile.avatarUrl ?? ""} />
+                    <AvatarFallback className="bg-game-status-heal">
+                      {profile.firstName[0]}
+                      {profile.lastName[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                </PopoverTrigger>
+                <PopoverContent className="bg-gray-900 border-none shadow-none flex gap-6 justify-end px-6">
+                  <EditProfile profile={profile} />
+                  <LogoutButton errorCallback={() => {}} />
+                </PopoverContent>
+              </Popover>
             </div>
           )}
         </div>
