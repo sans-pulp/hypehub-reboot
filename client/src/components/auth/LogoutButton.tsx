@@ -15,7 +15,7 @@ export const LogoutButton = ({errorCallback}:{errorCallback: () => void}) => {
     }
     
     return (
-        <Button onClick={handleLogout} variant="destructive">Logout</Button>
+        <Button onClick={handleLogout} variant="destructive" className="font-pixel text-sm">Logout</Button>
     )
     
 }   

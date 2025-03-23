@@ -22,7 +22,7 @@ export const Navigation = ({ activeView, onViewChange }: NavigationProps) => {
   ];
 
   return (
-    <div className="w-full bg-gray-900  ">
+    <div className="w-full bg-gray-900">
       <div className="container mx-auto px-4">
         <Tabs
           className="w-fit mx-auto pt-10"
@@ -34,7 +34,7 @@ export const Navigation = ({ activeView, onViewChange }: NavigationProps) => {
               <TabsTrigger
                 key={item.id}
                 value={item.value}
-                className="data-[state=active]:bg-purple-600 h-10 px-4 focus:outline-none focus:ring-0 focus:ring-offset-0"
+                className="data-[state=active]:bg-purple-600 h-10 px-4 focus:outline-none focus:ring-0 focus:ring-offset-0 font-pixel "
               >
                 {item.label}
               </TabsTrigger>
