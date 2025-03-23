@@ -1,4 +1,5 @@
 ---
+# Install required packages
 - name: Install Nginx and Certbot
   apt:
     name:
@@ -6,7 +7,9 @@
       - certbot
       - python3-certbot-nginx
     state: present
+    update_cache: yes
 
+# Configure Nginx (initially without SSL)
 - name: Configure Nginx with template
   template:
     src: hypehub.conf.j2
@@ -26,5 +29,22 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
   notify: reload nginx
-  
+
+- name: Ensure Nginx is running
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+# SSL Certificate
+- name: Check if CERTBOT_EMAIL is provided
+  fail:
+    msg: "CERTBOT_EMAIL environment variable must be set to obtain SSL certificate"
+  when: lookup('env', 'CERTBOT_EMAIL') == ''
+
+- name: Obtain and configure SSL certificate
+  command: certbot --nginx -d {{ websocket_domain }} --non-interactive --agree-tos --email {{ lookup('env', 'CERTBOT_EMAIL') }} --redirect
+  args:
+    creates: /etc/letsencrypt/live/{{ websocket_domain }}/fullchain.pem
+  notify: reload nginx
   

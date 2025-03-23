@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Press_Start_2P } from "next/font/google";
+import { Press_Start_2P, Exo_2, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { WebSocketProvider } from "@/WebSocketContext";
+import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { Toaster } from "@/components/ui/sonner";
 
 const pressStart2P = Press_Start_2P({
@@ -9,9 +9,20 @@ const pressStart2P = Press_Start_2P({
   style: ["normal"],
   weight: ["400"],
   display: "swap",
+  variable: '--font-press-start',
 });
 
+const exo2 = Exo_2({
+  subsets: ["latin"],
+  display: "swap",
+  variable: '--font-exo2',
+});
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: '--font-space-grotesk',
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,7 +36,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={pressStart2P.className}>
+      <body className={`${pressStart2P.className} ${exo2.variable} ${spaceGrotesk.variable}`}>
         <WebSocketProvider>
         <div className="mx-auto overflow-hidden">
           {children}

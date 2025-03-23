@@ -33,6 +33,8 @@ export const createInitialProfile = async (email: string, firstName: string, las
             profileId: profile.id,
             createdAt: new Date(),
             updatedAt: new Date(),
+            experience: 10, // all new profiles start with 10 experience
+            level: 1,
         })
         .returning()
 

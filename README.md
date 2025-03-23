@@ -22,33 +22,51 @@ HypeHub is a gamified productivity application built with Next.js that turns you
     - Ideal for breaking bad habits, meditation, and challenging personal goals
     - Example: "Meditate for 15 minutes" (+2 WIL)
 - **Multiple Goal Types**:
-  - **Daily**: Quick quests that reset daily (1-3 attribute points)
+  - **Daily**: Quick quests that reset daily (1-5 attribute points)
     - Perfect for building habits and maintaining daily routines
-  - **Missions**: Medium-term challenges (1-4 weeks, 3-5 attribute points)
+  - **Missions**: Medium-term challenges (5-15 attribute points)
     - Ideal for projects and medium-scope achievements
-  - **Quests**: Epic long-term adventures (1-12 months, 5-10 attribute points)
+  - **Quests**: Epic long-term adventures (15-50 attribute points)
     - Perfect for life-changing goals and major achievements
-- **Attribute System**: Each completed goal awards attribute points based on type and difficulty
+- **Progression Systems**:
+  - **Level System**: Progress through levels with tiered XP rewards, level-up celebrations, and visual progress tracking
+  - **Attribute System**: Each completed goal awards attribute points based on type and difficulty
+  - **Goal History**: View completed goals by attribute with detailed rewards and completion dates
+- **Profile Features**:
+  - **Profile Avatars**: Custom profile pictures with fallback initials
+- **External Integrations**:
+  - **Weather Integration**: Real-time weather data with temperature tracking and forecasts
 - **Real-time Features**: 
   - Server status indicator
-  - Live chat with other users
-  - User presence tracking
+  - Connected users count
   - Real-time notifications
   - Goal completion celebrations
 
 ## Screenshots
 
-![Login Page](./screenshots/login.png)
+![Login Page](./client/public/screenshots/login.png)
 *Login Page with retro-styled interface*
 
-![Register Page](./screenshots/register.png)
+![Register Page](./client/public/screenshots/register.png)
 *Registration Page with retro-styled interface*
 
-![Dashboard](./screenshots/dashboard.png)
-*Dashboard showing welcome screen, character stats and active goals*
+![Welcome Screen](./client/public/screenshots/welcome.png)
+*Welcome screen with character stats and active goals*
 
-![Goal Creation](./screenshots/goal-creation.png)
+![Dashboard](./client/public/screenshots/dashboard.png)
+*Dashboard showing character progression and attributes*
+
+![Goals View](./client/public/screenshots/viewGoals.png)
+*Goals list with filtering and sorting options*
+
+![Goal Creation](./client/public/screenshots/createGoal.png)
 *Goal Creation Form with attribute rewards*
+
+![Goal Details](./client/public/screenshots/viewGoalDetails.png)
+*Detailed view of a goal with progress tracking*
+
+![Completed Goals](./client/public/screenshots/completedGoalsView.png)
+*Completed goals view with attribute-based filtering*
 
 ## Tech Stack
 
@@ -117,7 +135,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 NEXT_PUBLIC_WEBSOCKET_URL=your_websocket_url
 DATABASE_URL=your_database_url
 DATABASE_SESSION_POOL_URL=your_session_pool_url
-SUPABASE_BUCKET_NAME=your_bucket_name
+NEXT_PUBLIC_SUPABASE_BUCKET_NAME=your_bucket_name
 
 # Server (.env in server/)
 PORT=8080
@@ -200,7 +218,7 @@ cd infrastructure/ansible
 - Enhanced progress visualization and attribute tracking
 - Flexible goal filtering (daily, weekly, monthly views)
 - Smart dashboard widgets:
-  - Weather integration
+  - Weather integration (✅ Basic implementation)
   - News feed
   - Upcoming goals preview
 - Improved animations and visual feedback
@@ -217,7 +235,7 @@ cd infrastructure/ansible
   - Missions: 1-4 weeks
   - Quests: 1-12 months
 - Weather-aware outdoor goals:
-  - Location-based weather checks
+  - Location-based weather checks (✅ Basic weather data)
   - Indoor alternatives suggestions
   - Weather alerts and planning
 

@@ -23,6 +23,7 @@ export const profilesTable = pgTable('profiles', {
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().$onUpdate(() => new Date()),
     bio: text('bio'),
+    avatarUrl: text('avatar_url'),
 })
 
 export const goalsTable = pgTable('goals', {
