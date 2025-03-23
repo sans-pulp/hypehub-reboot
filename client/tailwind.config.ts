@@ -9,6 +9,11 @@ export default {
     ],
   theme: {
     extend: {
+      fontFamily: {
+        pixel: ['var(--font-press-start)'],
+        body: ['var(--font-exo2)'],
+        grotesk: ['var(--font-space-grotesk)'],
+      },
       colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

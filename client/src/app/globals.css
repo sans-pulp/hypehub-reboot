@@ -25,7 +25,7 @@
   }
   
   .hypehub-input {
-    @apply bg-gray-800 border-gray-700 text-white  h-12 text-xs sm:text-sm md:text-base placeholder:text-xs placeholder:sm:text-sm placeholder:md:text-base;
+    @apply bg-gray-800 border-gray-700 text-white font-body  h-12 text-lg sm:text-sm md:text-base placeholder:text-xs placeholder:sm:text-sm placeholder:md:text-base;
   }
   
   .hypehub-textarea {
@@ -36,15 +36,15 @@
 /* Responsive text sizing */
 @layer base {
   h1 {
-    @apply text-2xl sm:text-3xl md:text-4xl font-bold;
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold font-pixel;
   }
   
   h2 {
-    @apply text-xl sm:text-2xl md:text-3xl font-semibold;
+    @apply text-xl sm:text-2xl md:text-3xl font-semibold font-pixel;
   }
   
   p {
-    @apply text-sm sm:text-base;
+    @apply text-sm sm:text-base font-sans;
   }
 }
 
@@ -134,7 +134,15 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-pixel;
+  }
+
+  p, input, textarea, button {
+    @apply font-body;
   }
 }
 
@@ -204,5 +212,17 @@
 .badge {
   @apply  
   px-3 py-1 
-  capitalize text-xs;
+  uppercase text-sm font-body font-bold;
+}
+
+.font-pixel {
+  font-family: var(--font-press-start);
+}
+
+.font-body {
+  font-family: var(--font-exo2);
+}
+
+.font-grotesk {
+  font-family: var(--font-space-grotesk);
 }
