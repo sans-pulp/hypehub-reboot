@@ -44,28 +44,28 @@ HypeHub is a gamified productivity application built with Next.js that turns you
 
 ## Screenshots
 
-![Login Page](./screenshots/login.png)
+![Login Page](./client/public/screenshots/login.png)
 *Login Page with retro-styled interface*
 
-![Register Page](./screenshots/register.png)
+![Register Page](./client/public/screenshots/register.png)
 *Registration Page with retro-styled interface*
 
-![Welcome Screen](./screenshots/welcome.png)
+![Welcome Screen](./client/public/screenshots/welcome.png)
 *Welcome screen with character stats and active goals*
 
-![Dashboard](./screenshots/dashboard.png)
+![Dashboard](./client/public/screenshots/dashboard.png)
 *Dashboard showing character progression and attributes*
 
-![Goals View](./screenshots/viewGoals.png)
+![Goals View](./client/public/screenshots/viewGoals.png)
 *Goals list with filtering and sorting options*
 
-![Goal Creation](./screenshots/createGoal.png)
+![Goal Creation](./client/public/screenshots/createGoal.png)
 *Goal Creation Form with attribute rewards*
 
-![Goal Details](./screenshots/viewGoalDetails.png)
+![Goal Details](./client/public/screenshots/viewGoalDetails.png)
 *Detailed view of a goal with progress tracking*
 
-![Completed Goals](./screenshots/completedGoalsView.png)
+![Completed Goals](./client/public/screenshots/completedGoalsView.png)
 *Completed goals view with attribute-based filtering*
 
 ## Tech Stack
