@@ -63,7 +63,7 @@ export const RegisterForm = () => {
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           required
-          className="w-full"
+          className="w-full border-2 border-gray-800 font-body hypehub-input-alt"
         />
       </div>
       <div className="space-y-2">
@@ -74,7 +74,7 @@ export const RegisterForm = () => {
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           required
-          className="w-full"
+          className="w-full border-2 border-gray-800"
         />
       </div>
       <div className="space-y-2">
@@ -85,7 +85,7 @@ export const RegisterForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full"
+          className="w-full border-2 border-gray-800"
         />
       </div>
       <div className="space-y-2">
@@ -96,11 +96,11 @@ export const RegisterForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full"
+          className="w-full border-2 border-gray-800"
         />
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full font-pixel" disabled={loading}>
         {loading ? "Registering..." : "Register"}
       </Button>
       <div className="text-center text-sm mt-4">

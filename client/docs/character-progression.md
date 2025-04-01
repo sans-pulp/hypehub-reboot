@@ -11,14 +11,23 @@
   - Simple display
 
 ### Experience System
-- Basic level progression
-  - Simple XP calculation
-  - Level display
-  - Progress bar visualization
+- Tiered level progression
+  - Early levels (1-5): Linear progression (+25 XP per level)
+  - Mid levels (6-10): Moderate increase (+32.5 XP per level)
+  - Higher levels (11+): Steeper curve (+65-75 XP per level)
 - Current display
   - Basic NES.css styled progress bars
   - Simple level number
   - Current XP amount
+- XP Sources
+  - Goal completion (primary source)
+  - Daily login rewards
+    - Base XP for logging in each day
+    - Streak bonuses for consecutive days
+  - Streak bonuses
+    - Multipliers for maintaining daily goals
+    - Bonus XP for achievement streaks
+    - Special rewards for milestone streaks
 
 ## Planned Enhancements
 

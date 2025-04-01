@@ -2,8 +2,35 @@
 
 import { db } from "..";  
 import { eq } from "drizzle-orm";
-import { goalsTable, attributesTable, type AttributeReward, profilesTable, InsertProfile } from "../schema";
+import { goalsTable, attributesTable, type AttributeReward, profilesTable, InsertProfile, Goal } from "../schema";
 import { calculateLevelFromXP } from "@/utils/gameUtils";
+
+
+export const updateGoal = async (goalId: number, updatedData: Partial<Goal>) => {
+    console.log('Updating goal', goalId, updatedData);
+    try {
+
+        return await db.transaction(async (tx) => {
+            // find the goal
+            const [goal] = await tx.select().from(goalsTable).where(eq(goalsTable.id, goalId));
+            if (!goal) {
+                throw new Error('Goal not found');
+            }
+            
+            // update the goal
+            const [updatedGoal] = await tx.update(goalsTable).set({
+                ...updatedData,
+                updatedAt: new Date()
+            }).where(eq(goalsTable.id, goalId)).returning();
+            
+            // return the updated goal
+            return updatedGoal;
+        });
+    } catch (error) {
+        console.error('Error updating goal', error);
+        throw error;
+    }
+}
 
 export const completeGoal = async (goalId: number, profileId: number) => {
     return await db.transaction(async (tx) => {

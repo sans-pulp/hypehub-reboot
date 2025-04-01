@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Goal } from "@/db/schema";
-import { completeGoal } from "@/db/queries/update";
+import { completeGoal, updateGoal } from "@/db/queries/update";
 import { Progress } from "@/components/ui/progress";
 import { EnhancedGoalCreation } from "./EnhancedGoalCreation";
 import { GoalDialog } from "./GoalDialog";
@@ -11,7 +11,8 @@ import { GoalFilters } from "./GoalFilters";
 interface GoalsViewProps {
   goals: Goal[] | null;
   profileId: number;
-  onGoalComplete: (goalId: number) => void;
+  onGoalComplete: (goal: Goal) => void;
+  refreshGoals: () => void;
 }
 
 export const getGoalTypeColor = (type: string) => {
@@ -57,9 +58,12 @@ export const getGoalTypeHoverColor = (type: string) => {
   }
 };
 
-
-
-export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
+export const Goals = ({ 
+  goals, 
+  profileId, 
+  onGoalComplete,
+  refreshGoals 
+}: GoalsViewProps) => {
   const [activeFilter, setActiveFilter] = useState<
     "all" | "daily" | "mission" | "quest"
   >("all");
@@ -95,14 +99,16 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
       return typeMatches && attributesMatch;
     });
 
-
-
   const handleCompleteGoal = async (goalId: number) => {
     try {
       setLoading(true);
       setCompletingGoalId(goalId);
       await completeGoal(goalId, profileId);
-      onGoalComplete(goalId);
+      
+      const goal = goals.find(g => g.id === goalId);
+      if (goal) {
+        onGoalComplete(goal);
+      }
     } catch (error) {
       console.error("Error completing goal:", error);
     } finally {
@@ -111,7 +117,22 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
     }
   };
 
-  
+  const handleEditGoal = async (goalId: number, updatedData: Partial<Goal>): Promise<Goal> => {
+    try {
+      setLoading(true);
+      const updatedGoal = await updateGoal(goalId, updatedData);
+      if (!updatedGoal) {
+        throw new Error('Failed to update goal');
+      }
+      refreshGoals();
+      return updatedGoal;
+    } catch (error) {
+      console.error("Error editing goal:", error);
+      throw error; // Re-throw to let GoalDialog handle the error
+    } finally {
+      setLoading(false);
+    }
+  };
 
   console.log({
     goals,
@@ -127,10 +148,7 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
         </div>
         <EnhancedGoalCreation
           profileId={profileId}
-          onGoalCreated={() => {
-            // Trigger a refresh via parent component
-            onGoalComplete(-1); // Using -1 as a signal to just refresh
-          }}
+          refreshGoals={refreshGoals}
         />
       </div>
 
@@ -165,7 +183,6 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
         allAttributes={allAttributes}
       />
 
-
       {/* Goals List */}
       <div className="space-y-4">
         {filteredGoals.length === 0 ? (
@@ -182,6 +199,7 @@ export const Goals = ({ goals, profileId, onGoalComplete }: GoalsViewProps) => {
               loading={loading}
               completingGoalId={completingGoalId}
               onComplete={handleCompleteGoal}
+              onEdit={handleEditGoal}
             />
           ))
         )}

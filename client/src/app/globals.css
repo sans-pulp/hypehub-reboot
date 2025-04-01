@@ -27,6 +27,9 @@
   .hypehub-input {
     @apply bg-gray-800 border-gray-700 text-white font-body  h-12 text-lg sm:text-sm md:text-base placeholder:text-xs placeholder:sm:text-sm placeholder:md:text-base;
   }
+  .hypehub-input-alt {
+    @apply bg-gray-800 border-gray-700 text-black font-body  h-12 text-base md:text-xl placeholder:text-xs placeholder:sm:text-sm placeholder:md:text-base;
+  }
   
   .hypehub-textarea {
     @apply flex w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm sm:text-base text-white ring-offset-background placeholder:text-xs placeholder:sm:text-sm placeholder:md:text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[4rem] sm:min-h-[5rem] max-h-[12rem] sm:max-h-[16rem] resize-y;
@@ -225,4 +228,82 @@
 
 .font-grotesk {
   font-family: var(--font-space-grotesk);
+}
+
+.welcome-screen, .login-screen, .register-screen {
+  position: absolute; 
+  inset: 0;
+  background: #000;
+  overflow: hidden;
+}
+
+.welcome-screen::before, .login-screen::before, .register-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMTkuNSIgbnVtT2N0YXZlcz0iMTAiIHJlc3VsdD0idHVyYnVsZW5jZSIvPjxmZUNvbXBvc2l0ZSBvcGVyYXRvcj0iaW4iIGluPSJ0dXJidWxlbmNlIiBpbjI9IlNvdXJjZUFscGhhIiByZXN1bHQ9ImNvbXBvc2l0ZSIvPjxmZUNvbG9yTWF0cml4IGluPSJjb21wb3NpdGUiIHR5cGU9Imx1bWluYW5jZVRvQWxwaGEiLz48ZmVCbGVuZCBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJjb21wb3NpdGUiIG1vZGU9ImNvbG9yLWJ1cm4iLz48L2ZpbHRlcj48L2RlZnM+PGcgZmlsdGVyPSJ1cmwoJyNhJykiPjxwYXRoIGZpbGw9IiNBMjQxRTgiIGQ9Ik0wIDBoMTAwdjEwMEgweiIvPjxwYXRoIGQ9Ik0wIDB2MTAwaDEwMFYwWiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9IiNENUE1MzYiIGZpbGw9IiMwMDAwIi8+PHBhdGggZmlsbD0iI0Q1QTUzNjgwIiBkPSJNNTAgMGgxdjEwMGgtMXoiLz48cGF0aCBmaWxsPSIjRDVBNTM2ODAiIGQ9Ik0wIDUwaDEwMHYxSDB6Ii8+PC9nPjwvc3ZnPg==");
+  mask: linear-gradient(rgba(0, 0, 0, 0.051), #000);
+  animation: backgroundPulse 8s ease-in-out infinite;
+}
+
+.welcome-screen::after, .login-screen::after, .register-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, 
+    rgba(162, 65, 232, 0.15) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+@keyframes backgroundPulse {
+  0%, 100% { 
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Optional: Add a subtle scan line effect */
+.welcome-screen {
+  position: relative;
+}
+
+/* .welcome-screen::before {
+  background-size: 100% 100%;
+} */
+
+.scan-lines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Optional: Add a vignette effect */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  pointer-events: none;
+}
+
+.welcome-screen .title, .login-screen .title, .register-screen .title {
+  background-color: #000 !important;
+  color: #fff !important;
 }

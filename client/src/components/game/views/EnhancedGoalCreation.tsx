@@ -40,7 +40,7 @@ const GOAL_TEMPLATES: GoalTemplate[] = [
   {
     name: "Workout Session",
     description: "Complete a 30-minute workout",
-    type: "Daily" as GoalType,
+    type: "daily" as GoalType,
     attributes: ["strength", "vitality"] as AttributeType[],
     attributePoints: { strength: 2, vitality: 2 } as Record<
       AttributeType,
@@ -50,21 +50,21 @@ const GOAL_TEMPLATES: GoalTemplate[] = [
   {
     name: "Read a Book",
     description: "Read at least 30 pages of a book",
-    type: "Daily" as GoalType,
+    type: "daily" as GoalType,
     attributes: ["knowledge"] as AttributeType[],
     attributePoints: { knowledge: 3 } as Record<AttributeType, number>,
   },
   {
     name: "Social Meetup",
     description: "Meet with friends or attend a social event",
-    type: "Mission" as GoalType,
+    type: "mission" as GoalType,
     attributes: ["social"] as AttributeType[],
     attributePoints: { social: 4 } as Record<AttributeType, number>,
   },
   {
     name: "Learn a New Skill",
     description: "Complete a course or tutorial on a new skill",
-    type: "Quest" as GoalType,
+    type: "quest" as GoalType,
     attributes: ["knowledge", "willpower"] as AttributeType[],
     attributePoints: { knowledge: 3, willpower: 2 } as Record<
       AttributeType,
@@ -76,7 +76,7 @@ const GOAL_TEMPLATES: GoalTemplate[] = [
 const emptyGoalFormData: GoalFormData = {
   name: "",
   description: "",
-  type: "Daily",
+  type: "daily",
   attributes: [],
   attributePoints: {},
   targetDate: format(addDays(new Date(), 1), "yyyy-MM-dd"),
@@ -84,7 +84,7 @@ const emptyGoalFormData: GoalFormData = {
 
 export const EnhancedGoalCreation = ({
   profileId,
-  onGoalCreated,
+  refreshGoals
 }: GoalFormProps) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<GoalFormData>(emptyGoalFormData);
@@ -97,7 +97,7 @@ export const EnhancedGoalCreation = ({
 
   // Update target date when goal type changes
   useEffect(() => {
-    if (formData.type === "Daily") {
+    if (formData.type === "daily") {
       const tomorrow = addDays(new Date(), 1);
       setFormData((prev) => ({
         ...prev,
@@ -109,7 +109,7 @@ export const EnhancedGoalCreation = ({
   // Form validation
   useEffect(() => {
     const hasValidTargetDate =
-      formData.type === "Daily" || formData.targetDate !== "";
+      formData.type === "daily" || formData.targetDate !== "";
     const isFormValid =
       formData.name.trim() !== "" &&
       formData.description.trim() !== "" &&
@@ -157,7 +157,7 @@ export const EnhancedGoalCreation = ({
       await createGoal(goalsObject);
       setOpen(false);
       resetForm();
-      onGoalCreated();
+      refreshGoals();
     } catch (error) {
       console.error("Failed to create goal:", error);
       setError("Failed to create goal. Please try again.");
@@ -376,27 +376,27 @@ export const EnhancedGoalCreation = ({
                   <SelectContent className="bg-gray-800 border-gray-700 text-white text-xs sm:text-base">
                     {GOAL_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
-                        {type === "Daily" && "📋 "}
-                        {type === "Mission" && "🏰 "}
-                        {type === "Quest" && "🗺️ "}
+                        {type === 'daily' && "📋 "}
+                        {type === 'mission' && "🏰 "}
+                        {type === 'quest' && "🗺️ "}
                         {type}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <p className="text-gray-400 text-xs sm:text-sm mt-1">
-                  {formData.type === "Daily" &&
+                  {formData.type === 'daily' &&
                     "Daily goals reset every day and are meant for building habits."}
-                  {formData.type === "Mission" &&
+                  {formData.type === 'mission' &&
                     "Missions are medium-term goals that might take a few days to weeks to complete."}
-                  {formData.type === "Quest" &&
+                  {formData.type === 'quest' &&
                     "Quests are significant achievements that require longer-term commitment."}
                 </p>
                 {formData.type && <GoalPointsGuide type={formData.type} />}
               </div>
 
               {/* Target Date */}
-              {formData.type !== "Daily" && (
+              {formData.type !== 'daily' && (
                 <div>
                   <Label
                     htmlFor="targetDate"
@@ -447,7 +447,6 @@ export const EnhancedGoalCreation = ({
                     </Button>
                   ))}
                 </div>
-
                 {formData.attributes.length > 0 && (
                   <div className="space-y-3 sm:space-y-4 bg-gray-800 p-3 sm:p-4 rounded-md">
                     <Label className="text-white text-sm block">
@@ -517,16 +516,16 @@ export const EnhancedGoalCreation = ({
                   <div className="flex justify-between items-center">
                     <Badge
                       className={`${
-                        template.type === "Daily"
+                        template.type === "daily"
                           ? "bg-blue-500"
-                          : template.type === "Mission"
+                          : template.type === "mission"
                           ? "bg-purple-500"
                           : "bg-amber-500"
                       } text-xs`}
                     >
-                      {template.type === "Daily" && "📋 "}
-                      {template.type === "Mission" && "🏰 "}
-                      {template.type === "Quest" && "🗺️ "}
+                      {template.type === "daily" && "📋 "}
+                      {template.type === "mission" && "🏰 "}
+                      {template.type === "quest" && "🗺️ "}
                       {template.type}
                     </Badge>
                     <div className="flex flex-wrap gap-1">

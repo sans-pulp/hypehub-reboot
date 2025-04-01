@@ -74,7 +74,7 @@ export const LoginForm = () => {
         />
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full font-pixel" disabled={loading}>
         {loading ? "Logging in..." : "Login"}
       </Button>
       <div className="text-center text-sm mt-4">

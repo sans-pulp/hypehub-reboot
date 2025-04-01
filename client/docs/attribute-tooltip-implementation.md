@@ -1,73 +1,79 @@
-# Attribute Tooltip Implementation Guide
+# Attribute Information Display Guide
 
 ## Overview
-The attribute tooltip system provides contextual information about character attributes, showing progression, rewards, and status effects in the gamified interface.
+The attribute information system provides contextual details about character attributes and achievements, focusing on mastery progression and achievement rarity in the gamified interface.
 
 ## Key Features
-- Dynamic attribute level display
-- Rarity tier progression system
-- Recent rewards tracking
-- Status effect visualization
-- Progress indicators for next tier
+- Attribute mastery level display
+- Achievement rarity indicators
+- Progress tracking towards next mastery tier
+- Recent attribute changes
+- Achievement history
 
 ## Color System Integration
 Uses established color schemes from tailwind.config.ts:
-- Attribute colors (strength, knowledge, etc.)
-- Rarity tiers (common → legendary)
-- Status effects (buffs/debuffs)
+- Attribute colors (strength, knowledge, vitality, social, willpower)
+- Rarity tiers for mastery and achievements:
+  - Common (1-20): Steel gray
+  - Uncommon (21-40): Emerald green
+  - Rare (41-60): Electric blue
+  - Epic (61-80): Royal purple
+  - Legendary (81-100): Gold
 
 ## Implementation Phases
 
-### Phase 1: Core Components
-1. Create base AttributeTooltip component
-2. Implement hover functionality
-3. Add basic attribute display
+### Phase 1: Attribute Display
+1. Create base AttributeInfo component
+2. Implement mastery level calculations
+3. Add progress tracking
+4. Display current tier and progress to next
 
-### Phase 2: Data Integration
-1. Connect to user attributes state
-2. Add rarity tier calculations
-3. Implement recent rewards tracking
-4. Add progress calculations
+### Phase 2: Achievement Integration
+1. Connect to achievement system
+2. Add rarity-based achievement display
+3. Show achievement history
+4. Implement achievement progress tracking
 
 ### Phase 3: Visual Feedback
-1. Add animations for value changes
-2. Implement status effect indicators
-3. Add progress bars for tier advancement
+1. Add animations for attribute changes
+2. Implement mastery tier transitions
+3. Add progress indicators
+4. Achievement unlock celebrations
 
 ## Component Dependencies
-- Tooltip (shadcn/ui)
-- Badge component
-- GamifyUser updates
-- Goal completion handlers
+- Radar/Heatmap chart
+- Achievement display
+- Progress indicators
+- User state management
 
 ## State Management Requirements
 Track:
-- Current attribute levels
-- Recent goal completions
-- Active status effects
-- Rarity tier thresholds
+- Current attribute levels and mastery tiers
+- Achievement completion and rarity
+- Progress towards next mastery level
+- Recent attribute changes
 
 ## Usage Guidelines
-- Use for interactive attribute displays
-- Implement on character status screen
-- Add to goal completion feedback
-- Include in achievement notifications
+- Integrate with radar/heatmap display
+- Show on achievement unlocks
+- Display during level-up events
+- Include in profile overview
 
 ## Performance Considerations
-- Memoize tooltip content
+- Cache mastery calculations
+- Optimize achievement queries
 - Batch attribute updates
-- Cache rarity calculations
-- Limit status effect history
+- Efficient progress calculations
 
 ## Future Enhancements
-- Achievement history
-- Detailed progression stats
-- Comparative analytics
-- Custom milestone markers
+- Detailed mastery statistics
+- Achievement combinations
+- Mastery rewards
+- Special achievement categories
 
 ## Testing Scenarios
-1. Attribute level changes
-2. Tier progression
-3. Multiple status effects
-4. Goal completion feedback
-5. Hover state management
+1. Attribute mastery progression
+2. Achievement rarity assignment
+3. Progress calculations
+4. Level-up events
+5. Multiple achievement unlocks

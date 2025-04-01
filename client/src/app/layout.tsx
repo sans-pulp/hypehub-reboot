@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Press_Start_2P, Exo_2, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { Toaster } from "@/components/ui/sonner";
 
 const pressStart2P = Press_Start_2P({
@@ -41,12 +40,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${pressStart2P.className} ${exo2.variable} ${spaceGrotesk.variable}`}>
-        <WebSocketProvider>
         <div className="mx-auto overflow-hidden">
           {children}
           <Toaster richColors />
         </div>
-        </WebSocketProvider>
       </body>
     </html>
   );

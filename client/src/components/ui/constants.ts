@@ -1,5 +1,5 @@
 
-export const GOAL_TYPES = ['Daily', 'Mission', 'Quest'] as const;
+export const GOAL_TYPES = ['daily', 'mission', 'quest'] as const;
 
 export const ATTRIBUTE_COLORS = {
   strength: 'bg-game-attribute-strength',

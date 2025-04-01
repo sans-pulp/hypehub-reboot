@@ -48,7 +48,7 @@ export interface AttributeSelectionProps {
  */
 export interface GoalFormProps {
     profileId: number;
-    onGoalCreated: () => void;
+    refreshGoals: () => void;
     initialData?: Partial<GoalFormData>;
 }
 
