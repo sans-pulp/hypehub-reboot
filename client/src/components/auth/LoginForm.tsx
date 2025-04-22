@@ -83,6 +83,11 @@ export const LoginForm = () => {
           Register
         </Link>
       </div>
+      <div className="text-center text-sm mt-2">
+        <Link href="/forgot-password" className="text-blue-600 hover:underline">
+          Forgot your password?
+        </Link>
+      </div>
     </form>
   );
 }

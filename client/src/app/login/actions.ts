@@ -8,7 +8,6 @@ import { getProfileByEmail } from '../../db/queries/select'
 
 export async function register(formData: FormData) {
   const supabase = await createClient()
-  // console.log("formData", formData)
   
   const email = formData.get('email')?.toString()
   const password = formData.get('password')?.toString()
